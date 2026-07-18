@@ -5,6 +5,7 @@ export const homeScreen = {
   mount(container, ctx) {
     // Arriving home always tears down any leftover game/network state.
     ctx.session.reset();
+    ctx.wakeLock.disable();
     const { dataset, theme } = ctx;
 
     container.append(

@@ -3,6 +3,7 @@
 import { createAudio } from './audio.js';
 import { applyTheme, loadConfig } from './config.js';
 import { createRouter } from './router.js';
+import { createWakeLock } from './wakelock.js';
 import { el } from './util.js';
 import { homeScreen } from './ui/screens/home.js';
 import { hostSetupScreen } from './ui/screens/hostSetup.js';
@@ -57,7 +58,8 @@ async function boot() {
   const { dataset, theme, gameDefaults } = config;
   applyTheme(theme, dataset);
   const audio = createAudio(theme.sounds);
-  const ctx = { dataset, theme, gameDefaults, audio, session: makeSession() };
+  const wakeLock = createWakeLock();
+  const ctx = { dataset, theme, gameDefaults, audio, wakeLock, session: makeSession() };
 
   const router = createRouter(app, ctx);
   ctx.router = router;

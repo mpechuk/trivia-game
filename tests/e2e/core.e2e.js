@@ -96,6 +96,22 @@ export async function run(errors) {
     for (const p of [p1, p2]) {
       await p.locator('button.player-answer').first().waitFor({ timeout: 20000 });
     }
+    // Player answer buttons are stacked horizontal bars (single column), and
+    // the game requested a screen wake lock to stop the phone sleeping.
+    const layout = await p1.evaluate(() => {
+      const box = document.querySelector('.player-buttons');
+      const style = getComputedStyle(box);
+      const btns = [...document.querySelectorAll('.player-answer')];
+      const oneColumn = btns.every((b) => Math.abs(b.getBoundingClientRect().left - btns[0].getBoundingClientRect().left) < 1);
+      return { display: style.display, direction: style.flexDirection, oneColumn };
+    });
+    if (layout.display !== 'flex' || layout.direction !== 'column' || !layout.oneColumn) {
+      throw new Error(`player buttons not a horizontal-bar stack: ${JSON.stringify(layout)}`);
+    }
+    const wantsWakeLock = await p1.evaluate(() => window.__trivia.wakeLock.wanted === true);
+    if (!wantsWakeLock) throw new Error('player screen did not request a wake lock');
+    console.log('  player buttons are stacked horizontal bars; wake lock requested');
+
     await p1.locator('button.player-answer').nth(0).click();
     await p1.locator('.player-locked').waitFor({ timeout: 5000 });
     await p2.locator('button.player-answer').nth(1).click();

@@ -312,12 +312,14 @@ export const hostGameScreen = {
       net.onDisconnect = (playerId) => engine.markConnected(playerId, false);
     }
 
+    ctx.wakeLock.enable(); // keep the host screen awake for the whole game
     engine.start();
 
     return () => {
       unsubs.forEach((u) => u());
       timer.stop();
       confettiCleanup?.();
+      ctx.wakeLock.disable();
       if (net) {
         net.onAnswer = null;
         net.onJoin = null;

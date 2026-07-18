@@ -152,6 +152,7 @@ export const lobbyScreen = {
     );
     renderPlayers();
     net.broadcast(lobbyMsg()); // tell returning players we're back in the lobby
+    ctx.wakeLock.enable(); // keep the host awake while waiting for players
 
     return () => {
       net.onJoin = null;

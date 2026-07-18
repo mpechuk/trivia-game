@@ -251,10 +251,13 @@ export const playerGameScreen = {
     if (pendingState) applyState(pendingState);
     else showWaiting();
 
+    ctx.wakeLock.enable(); // keep the phone awake for the whole game
+
     return () => {
       unsubs.forEach((u) => u());
       stopTimer();
       confettiCleanup?.();
+      ctx.wakeLock.disable();
     };
   },
 };
