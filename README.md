@@ -9,6 +9,11 @@ palette, sounds, timing, scoring — is driven by a single JSON configuration fi
 
 ## How to play
 
+On the home screen, first **choose a question pack** — pick one of the built-in packs
+(listed from [`data/packs.json`](data/packs.json)) or **upload your own** `.json` pack.
+Solo and hosting unlock once a pack is loaded; joining a game never needs one (players
+mirror the host's pack over the network).
+
 ### Solo
 **Play solo** → pick length, difficulty mix, categories, timer → answer on the same screen.
 
@@ -38,7 +43,13 @@ All numbers are configurable (`game_defaults.scoring`, plus an "Advanced scoring
 
 ## Make your own quiz
 
-Create a JSON file with the same shape and load it via `?config=`:
+Create a JSON file with the shape below, then use it any of three ways:
+
+- **Upload it** on the home screen (**Upload your own pack**) — nothing to deploy.
+- **List it as a built-in pack**: drop the file in `data/` and add an entry to
+  [`data/packs.json`](data/packs.json) (`file`, `name`, `emoji`, `description`) so it
+  appears as a card in the pack chooser.
+- **Deep-link it** via `?config=` (the pack is preselected on load):
 
 ```
 https://mpechuk.github.io/trivia-game/?config=data/my_quiz.json
