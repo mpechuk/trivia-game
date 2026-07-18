@@ -1,10 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Trivia Game</title>
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/screens.css">
+  <link rel="stylesheet" href="css/animations.css">
+  <script src="vendor/peerjs.min.js" defer></script>
+  <script src="vendor/qrcode.js" defer></script>
+  <script type="module" src="js/main.js"></script>
 </head>
 <body>
-  <h1>Hello World</h1>
+  <div id="app" class="screen screen-home"></div>
+  <button id="mute-btn" class="mute-btn" type="button" aria-label="Mute sounds">🔊</button>
+  <noscript>
+    <p style="text-align:center;padding:2rem">This trivia game needs JavaScript.</p>
+  </noscript>
 </body>
 </html>

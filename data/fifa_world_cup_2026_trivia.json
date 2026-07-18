@@ -18,6 +18,85 @@
     "Expert": 13
   },
   "image_note": "photo_link/answer_photo values are national flag images from the free flagcdn.com CDN, used as generic theme photos as permitted by the request. Swap in specific action photos/headshots if you'd like more bespoke images.",
+  "theme": {
+    "emoji": "⚽",
+    "logo_url": null,
+    "font_family": "'Trebuchet MS', 'Segoe UI', system-ui, sans-serif",
+    "colors": {
+      "background": "#0b1d3a",
+      "background_gradient": [
+        "#0b1d3a",
+        "#123c69"
+      ],
+      "surface": "#16294d",
+      "text": "#f5f7fb",
+      "text_muted": "#9fb0cc",
+      "primary": "#2dd4bf",
+      "accent": "#facc15",
+      "correct": "#22c55e",
+      "wrong": "#ef4444",
+      "timer": "#facc15"
+    },
+    "answer_buttons": [
+      {
+        "color": "#e21b3c",
+        "shape": "▲"
+      },
+      {
+        "color": "#1368ce",
+        "shape": "◆"
+      },
+      {
+        "color": "#d89e00",
+        "shape": "●"
+      },
+      {
+        "color": "#26890c",
+        "shape": "■"
+      },
+      {
+        "color": "#8e24aa",
+        "shape": "★"
+      }
+    ],
+    "background_image": null,
+    "sounds": {
+      "enabled": true,
+      "volume": 0.6,
+      "tick": null,
+      "tick_urgent": null,
+      "correct": null,
+      "wrong": null,
+      "reveal": null,
+      "advance": null,
+      "join": null,
+      "fanfare": null
+    }
+  },
+  "game_defaults": {
+    "question_count": 15,
+    "time_per_question_seconds": 30,
+    "choices_per_question": 4,
+    "difficulty_mix": "balanced",
+    "categories": "all",
+    "question_order": "ramp",
+    "scoring": {
+      "base_points": 100,
+      "max_speed_bonus": 100,
+      "difficulty_multiplier": [
+        1,
+        1.25,
+        1.5,
+        1.75,
+        2
+      ],
+      "wrong_penalty_max": 50,
+      "min_score": 0
+    },
+    "network": {
+      "peer_config": null
+    }
+  },
   "questions": [
     {
       "id": 1,

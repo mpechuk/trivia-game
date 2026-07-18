@@ -1,0 +1,115 @@
+/* Shared keyframe animations */
+
+.pop-in {
+  animation: pop-in 0.45s cubic-bezier(0.2, 0.9, 0.3, 1.4) backwards;
+}
+
+@keyframes pop-in {
+  from {
+    opacity: 0;
+    transform: scale(0.65);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.shake {
+  animation: shake 0.5s ease both;
+}
+
+@keyframes shake {
+  10%, 90% { transform: translateX(-2px); }
+  20%, 80% { transform: translateX(4px); }
+  30%, 50%, 70% { transform: translateX(-7px); }
+  40%, 60% { transform: translateX(7px); }
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.07); }
+}
+
+@keyframes glow {
+  from { box-shadow: 0 0 6px 2px color-mix(in srgb, var(--correct) 70%, transparent); }
+  to { box-shadow: 0 0 22px 8px color-mix(in srgb, var(--correct) 70%, transparent); }
+}
+
+/* race runners */
+.race-runner.bounce {
+  animation: runner-bounce 1s ease;
+}
+
+@keyframes runner-bounce {
+  0%, 100% { top: 2px; }
+  20% { top: -6px; }
+  40% { top: 2px; }
+  60% { top: -4px; }
+  80% { top: 1px; }
+}
+
+.race-runner.stumble {
+  animation: runner-stumble 1s ease;
+}
+
+@keyframes runner-stumble {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(-14deg); }
+  55% { transform: rotate(10deg); }
+  80% { transform: rotate(-5deg); }
+}
+
+/* podium pedestals rising */
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(60px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* confetti */
+.confetti-layer {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 40;
+}
+
+.confetti {
+  position: absolute;
+  top: -14px;
+  width: 10px;
+  height: 14px;
+  border-radius: 2px;
+  opacity: 0.95;
+  animation: confetti-fall 3s linear forwards;
+}
+
+@keyframes confetti-fall {
+  to {
+    transform: translateY(110vh) translateX(var(--drift, 0px)) rotate(720deg);
+    opacity: 0.7;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pop-in,
+  .shake,
+  .race-runner.bounce,
+  .race-runner.stumble,
+  .podium-step,
+  .confetti,
+  .timer-ring.urgent {
+    animation: none !important;
+  }
+
+  .race-runner {
+    transition: none;
+  }
+}
