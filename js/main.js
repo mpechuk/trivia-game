@@ -61,6 +61,8 @@ async function boot() {
 
   const router = createRouter(app, ctx);
   ctx.router = router;
+  // Debug/testing handle (used by the e2e suite to simulate transport drops).
+  window.__trivia = ctx;
   router.register('home', homeScreen);
   router.register('solo', hostSetupScreen(true));
   router.register('host', hostSetupScreen(false));

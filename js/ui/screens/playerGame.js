@@ -155,6 +155,17 @@ export const playerGameScreen = {
 
     function applyState(m) {
       overlayHost.replaceChildren();
+      // Idempotence guard: a resync describing exactly what is already on
+      // screen must not rebuild the view — repainting swaps the buttons out
+      // from under the player's finger (missed taps, visible flicker).
+      if (
+        m.phase === 'q_open' &&
+        current.index === m.index &&
+        !!current.locked === !!m.answered &&
+        main.querySelector('.player-buttons, .player-locked')
+      ) {
+        return;
+      }
       scoreEl.textContent = '';
       if (m.phase === 'q_open' || m.phase === 'q_intro') {
         showQuestion({

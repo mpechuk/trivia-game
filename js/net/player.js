@@ -44,6 +44,14 @@ export class PlayerNetwork {
   }
 
   _dial() {
+    // Retire the previous connection first. Its close event must NOT trigger
+    // a retry — after a phone unlock the host closes superseded connections,
+    // and reacting to those closes creates an endless reconnect/flicker loop.
+    const old = this.conn;
+    if (old) {
+      this.conn = null;
+      try { old.close(); } catch { /* already gone */ }
+    }
     const conn = this.peer.connect(ROOM_PREFIX + this.roomCode, { reliable: true });
     this.conn = conn;
     conn.on('open', () => {
@@ -53,14 +61,24 @@ export class PlayerNetwork {
     conn.on('data', (raw) => {
       const m = validateMsg(raw);
       if (!m) return;
-      if (m.type === MSG.WELCOME) this._welcomed = true;
+      if (m.type === MSG.WELCOME) {
+        this._welcomed = true;
+        // An answer tapped while the transport was dying never reached the
+        // host — replay it (the host ignores duplicates and stale rounds).
+        if (this.pendingAnswer) conn.send(msg(MSG.ANSWER, this.pendingAnswer));
+      }
+      if (m.type === MSG.QUESTION || m.type === MSG.ANSWER_ACK) this.pendingAnswer = null;
       // The resync STATE can arrive while the UI is still navigating between
       // screens (no listener mounted yet) — keep it for late subscribers.
       if (m.type === MSG.STATE) this.lastState = m;
       this.events.emit(m.type, m);
     });
-    conn.on('close', () => this._scheduleRetry());
-    conn.on('error', () => this._scheduleRetry());
+    conn.on('close', () => {
+      if (this.conn === conn) this._scheduleRetry();
+    });
+    conn.on('error', () => {
+      if (this.conn === conn) this._scheduleRetry();
+    });
   }
 
   _scheduleRetry() {
@@ -91,6 +109,9 @@ export class PlayerNetwork {
   }
 
   answer(questionIndex, choiceIndex) {
+    // Remember the answer until it is acked (or the round moves on) so a
+    // reconnect can replay it if the send raced a dying connection.
+    this.pendingAnswer = { questionIndex, choiceIndex };
     if (this.conn?.open) this.conn.send(msg(MSG.ANSWER, { questionIndex, choiceIndex }));
   }
 

@@ -100,6 +100,70 @@ export async function run(errors) {
     await p1Ctx.close();
   }
 
+  // ---------- zombie-connection reconnect (phone screen-lock regression) ----------
+  // Waking a locked phone re-dials while the old connection is half-alive.
+  // The old connection's close event must not trigger another reconnect
+  // (join storm → host closes previous conn → close → retry → …), and an
+  // identical STATE resync must not rebuild the answer buttons (flicker /
+  // missed taps).
+  {
+    const hostCtx = await browser.newContext();
+    const p1Ctx = await browser.newContext();
+    const host = await hostCtx.newPage();
+    const p1 = await p1Ctx.newPage();
+    watch(host, 'host', errors);
+    watch(p1, 'p1', errors);
+
+    await host.goto(BASE);
+    await host.getByRole('button', { name: /Host multiplayer/ }).click();
+    await setupGame(host, { count: '3', timer: '30' });
+    await host.getByRole('button', { name: /Create room/ }).click();
+    await host.locator('.lobby-code').waitFor({ timeout: 20000 });
+    const code = (await host.locator('.lobby-code').textContent()).trim();
+
+    await p1.goto(`${BASE}#/join/${code}`);
+    await p1.locator('input.input:not(.input-code)').first().fill('Anna');
+    await p1.getByRole('button', { name: /Join game/ }).click();
+    await p1.locator('.player-waiting').waitFor({ timeout: 20000 });
+    await host.getByRole('button', { name: /Start game/ }).click();
+    await p1.locator('button.player-answer').first().waitFor({ timeout: 20000 });
+
+    // Count re-joins on the host and mark the live DOM on the player.
+    await host.evaluate(() => {
+      const net = window.__trivia.session.host.net;
+      window.__joinCount = 0;
+      const orig = net.onJoin;
+      net.onJoin = (j) => { window.__joinCount++; orig(j); };
+    });
+    await p1.evaluate(() => {
+      document.querySelector('button.player-answer').dataset.marker = 'keep';
+      // Simulate the post-screen-lock wakeup: dial a second connection while
+      // the first one is still attached on the host.
+      window.__trivia.session.player.net._dial();
+    });
+
+    // Long enough for the broken version's 1s/2s/4s retry storm to show up.
+    await p1.waitForTimeout(8500);
+
+    const joins = await host.evaluate(() => window.__joinCount);
+    if (joins > 1) throw new Error(`reconnect storm: ${joins} re-joins after one transport drop`);
+    const conns = await host.evaluate(() => window.__trivia.session.host.net.connections.size);
+    if (conns !== 1) throw new Error(`host should hold exactly 1 connection, has ${conns}`);
+    const marker = await p1.evaluate(
+      () => document.querySelector('button.player-answer')?.dataset.marker
+    );
+    if (marker !== 'keep') throw new Error('player view was rebuilt (flicker) by an identical resync');
+
+    // Taps must register after recovery.
+    await p1.locator('button.player-answer').nth(0).click();
+    await p1.locator('.player-locked').waitFor({ timeout: 5000 });
+    await host.locator('.answer-line').waitFor({ timeout: 20000 });
+    console.log('ZOMBIE-RECONNECT OK — one re-join, no flicker, taps register');
+
+    await hostCtx.close();
+    await p1Ctx.close();
+  }
+
   // ---------- subpath serving (GitHub Pages /trivia-game/ invariant) ----------
   {
     const ctx = await browser.newContext();
