@@ -140,7 +140,7 @@ export class GameEngine {
     const s = this.scoring;
     const mult = s.difficulty_multiplier[clamp(difficulty, 1, 5) - 1] ?? 1;
     if (correct) return Math.round((s.base_points + s.max_speed_bonus * frac) * mult);
-    return -Math.round(s.wrong_penalty_max * frac);
+    return -Math.round(s.wrong_penalty_max * frac) || 0; // "|| 0" normalizes -0
   }
 
   _computeReveal() {

@@ -93,6 +93,28 @@ python3 -m http.server 8080     # then open http://127.0.0.1:8080/
 To test multiplayer locally without the PeerJS cloud, run `npx peerjs --port 9100` and point
 `game_defaults.network.peer_config` at `{"host":"127.0.0.1","port":9100,"path":"/","secure":false}`.
 
+### Tests
+
+Unit tests (game engine, scoring, question sampling, wire protocol, avatars, config
+merging — Node's built-in test runner) and Playwright end-to-end tests (solo games on
+both timer paths, a full multiplayer game over a local PeerServer including reconnects,
+disconnects, late-join rejection and play-again, JSON-driven theming, subpath serving).
+Both run in CI on every PR (`.github/workflows/test.yml`).
+
+```
+npm install
+npm test                                  # unit tests
+npx playwright install chromium           # once
+npm run test:e2e                          # end-to-end (starts its own servers)
+```
+
+### Sounds
+
+The eight bundled effects in `assets/sounds/` are CC0 and swappable — see
+[docs/SOUND_PACKS.md](docs/SOUND_PACKS.md) for where to download free sound packs
+(Kenney, OpenGameArt, Freesound…) and how to wire them in, and
+`tools/generate_sounds.py` to regenerate the bundled ones.
+
 Notes:
 - All asset URLs are relative, so the app works from a subpath (Pages, PR previews).
 - The deploy workflow uses `keep_files: true` — renamed/deleted files linger on
@@ -105,4 +127,5 @@ Notes:
 - [DiceBear](https://www.dicebear.com/) — free avatar HTTP API (styles by their respective artists).
 - Question photos in the sample dataset use flag images from [flagcdn.com](https://flagcdn.com/).
 - Sound effects in `assets/sounds/` were synthesized specifically for this project
-  (public domain / CC0 — use them however you like).
+  (public domain / CC0 — use them however you like). Swap in downloaded packs via
+  [docs/SOUND_PACKS.md](docs/SOUND_PACKS.md).
