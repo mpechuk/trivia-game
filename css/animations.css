@@ -40,16 +40,16 @@
 
 /* Idle: waiting in place, gently shifting weight, tapping a foot. */
 .stickman.idle {
-  animation: stick-breathe var(--idle-dur, 2.4s) ease-in-out infinite;
+  animation: stick-breathe var(--idle-dur, 4.8s) ease-in-out infinite;
   animation-delay: var(--phase, 0s);
 }
 .stickman.idle .leg-r {
-  animation: leg-tap var(--idle-dur, 2.4s) ease-in-out infinite;
+  animation: leg-tap var(--idle-dur, 4.8s) ease-in-out infinite;
   animation-delay: var(--phase, 0s);
 }
 .stickman.idle .arm-l,
 .stickman.idle .arm-r {
-  animation: arm-sway var(--idle-dur, 2.4s) ease-in-out infinite;
+  animation: arm-sway var(--idle-dur, 4.8s) ease-in-out infinite;
 }
 
 @keyframes stick-breathe {
@@ -67,17 +67,17 @@
 
 /* Run: legs and arms pump in opposite phase, leaning toward the finish. */
 .stickman.run {
-  animation: stick-run-bob var(--dur, 0.55s) ease-in-out infinite;
+  animation: stick-run-bob var(--dur, 1.1s) ease-in-out infinite;
   animation-delay: var(--phase, 0s);
 }
 .stickman.run .leg-l,
 .stickman.run .arm-r {
-  animation: limb-swing-a var(--dur, 0.55s) ease-in-out infinite;
+  animation: limb-swing-a var(--dur, 1.1s) ease-in-out infinite;
   animation-delay: var(--phase, 0s);
 }
 .stickman.run .leg-r,
 .stickman.run .arm-l {
-  animation: limb-swing-b var(--dur, 0.55s) ease-in-out infinite;
+  animation: limb-swing-b var(--dur, 1.1s) ease-in-out infinite;
   animation-delay: var(--phase, 0s);
 }
 
@@ -100,17 +100,17 @@
 
 /* Stumble: knocked backward, arms flailing, legs buckling. */
 .stickman.stumble {
-  animation: stick-stumble var(--stumble-dur, 0.95s) ease;
+  animation: stick-stumble var(--stumble-dur, 1.9s) ease;
 }
 .stickman.stumble .arm-l,
 .stickman.stumble .arm-r {
-  animation: arm-flail var(--stumble-dur, 0.95s) ease;
+  animation: arm-flail var(--stumble-dur, 1.9s) ease;
 }
 .stickman.stumble .leg-l {
-  animation: leg-buckle var(--stumble-dur, 0.95s) ease;
+  animation: leg-buckle var(--stumble-dur, 1.9s) ease;
 }
 .stickman.stumble .leg-r {
-  animation: leg-buckle-b var(--stumble-dur, 0.95s) ease;
+  animation: leg-buckle-b var(--stumble-dur, 1.9s) ease;
 }
 
 @keyframes stick-stumble {

@@ -164,12 +164,12 @@ export function racePosition(score, maxPossible) {
 export function randomGait() {
   return {
     swing: rand(24, 42),
-    dur: rand(0.42, 0.66),
+    dur: rand(0.84, 1.32),
     lean: rand(6, 13),
     bob: rand(2.5, 5),
-    phase: -rand(0, 0.5),
-    idleDur: rand(1.8, 3),
-    stumbleDur: rand(0.8, 1.1),
+    phase: -rand(0, 1),
+    idleDur: rand(3.6, 6),
+    stumbleDur: rand(1.6, 2.2),
   };
 }
 
@@ -219,7 +219,7 @@ export function raceTrack() {
   // Set the figure's mood. 'run'/'stumble' are transient bursts that settle
   // back to 'idle'; 'idle' just parks it. Restarting the class re-triggers the
   // keyframes so repeated moves in the same direction replay the animation.
-  function setMood(entry, mood, durMs = 1150) {
+  function setMood(entry, mood, durMs = 2300) {
     clearTimeout(entry.timer);
     entry.stickman.classList.remove('idle', 'run', 'stumble');
     // force a reflow so the keyframe animation restarts from the top
