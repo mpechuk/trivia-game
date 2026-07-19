@@ -14,16 +14,25 @@ const SOUND_NAMES = [
 ];
 
 export function createAudio(soundsConfig = {}, basePath = 'assets/sounds/') {
-  const enabled = soundsConfig.enabled !== false;
-  const baseVolume = typeof soundsConfig.volume === 'number' ? soundsConfig.volume : 0.6;
+  let cfg = soundsConfig || {};
+  let enabled = cfg.enabled !== false;
+  let baseVolume = typeof cfg.volume === 'number' ? cfg.volume : 0.6;
   let muted = localStorage.getItem('trivia_muted') === '1';
   let audioCtx = null;
   const buffers = new Map();
 
   function urlFor(name) {
-    return typeof soundsConfig[name] === 'string' && soundsConfig[name]
-      ? soundsConfig[name]
-      : `${basePath}${name}.wav`;
+    return typeof cfg[name] === 'string' && cfg[name] ? cfg[name] : `${basePath}${name}.wav`;
+  }
+
+  // Swap in a different pack's sounds block (volume/enabled/per-sound URLs).
+  // Buffers are dropped so overridden sounds reload from their new sources.
+  function reconfigure(nextConfig = {}) {
+    cfg = nextConfig || {};
+    enabled = cfg.enabled !== false;
+    baseVolume = typeof cfg.volume === 'number' ? cfg.volume : 0.6;
+    buffers.clear();
+    if (audioCtx && enabled) SOUND_NAMES.forEach(load);
   }
 
   async function load(name) {
@@ -78,6 +87,7 @@ export function createAudio(soundsConfig = {}, basePath = 'assets/sounds/') {
     play,
     toggleMute,
     unlock,
+    reconfigure,
     get muted() {
       return muted;
     },

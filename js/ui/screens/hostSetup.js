@@ -11,6 +11,11 @@ const TIMER_CHOICES = [10, 15, 20, 30, 45, 60, 90, 0]; // 0 = no limit
 export function hostSetupScreen(solo) {
   return {
     mount(container, ctx) {
+      // Reached without a pack (e.g. a direct #/solo link) — send them home to pick one.
+      if (!ctx.dataset) {
+        ctx.router.go('home');
+        return;
+      }
       const { dataset, gameDefaults } = ctx;
       const questions = dataset.questions;
       const catCounts = categoriesOf(questions);
