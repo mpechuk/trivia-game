@@ -36,28 +36,104 @@
   to { box-shadow: 0 0 22px 8px color-mix(in srgb, var(--correct) 70%, transparent); }
 }
 
-/* race runners */
-.race-runner.bounce {
-  animation: runner-bounce 1s ease;
+/* ---------- stick-figure runners ---------- */
+
+/* Idle: waiting in place, gently shifting weight, tapping a foot. */
+.stickman.idle {
+  animation: stick-breathe var(--idle-dur, 2.4s) ease-in-out infinite;
+  animation-delay: var(--phase, 0s);
+}
+.stickman.idle .leg-r {
+  animation: leg-tap var(--idle-dur, 2.4s) ease-in-out infinite;
+  animation-delay: var(--phase, 0s);
+}
+.stickman.idle .arm-l,
+.stickman.idle .arm-r {
+  animation: arm-sway var(--idle-dur, 2.4s) ease-in-out infinite;
 }
 
-@keyframes runner-bounce {
-  0%, 100% { top: 2px; }
-  20% { top: -6px; }
-  40% { top: 2px; }
-  60% { top: -4px; }
-  80% { top: 1px; }
+@keyframes stick-breathe {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(calc(var(--bob, 3px) * -0.35px)); }
 }
-
-.race-runner.stumble {
-  animation: runner-stumble 1s ease;
+@keyframes leg-tap {
+  0%, 68%, 100% { transform: rotate(0deg); }
+  84% { transform: rotate(-13deg); }
 }
-
-@keyframes runner-stumble {
+@keyframes arm-sway {
   0%, 100% { transform: rotate(0deg); }
-  25% { transform: rotate(-14deg); }
-  55% { transform: rotate(10deg); }
-  80% { transform: rotate(-5deg); }
+  50% { transform: rotate(4deg); }
+}
+
+/* Run: legs and arms pump in opposite phase, leaning toward the finish. */
+.stickman.run {
+  animation: stick-run-bob var(--dur, 0.55s) ease-in-out infinite;
+  animation-delay: var(--phase, 0s);
+}
+.stickman.run .leg-l,
+.stickman.run .arm-r {
+  animation: limb-swing-a var(--dur, 0.55s) ease-in-out infinite;
+  animation-delay: var(--phase, 0s);
+}
+.stickman.run .leg-r,
+.stickman.run .arm-l {
+  animation: limb-swing-b var(--dur, 0.55s) ease-in-out infinite;
+  animation-delay: var(--phase, 0s);
+}
+
+@keyframes stick-run-bob {
+  0%, 100% {
+    transform: translateY(0) rotate(calc(var(--lean, 9) * 1deg));
+  }
+  50% {
+    transform: translateY(calc(var(--bob, 3px) * -1px)) rotate(calc(var(--lean, 9) * 1deg));
+  }
+}
+@keyframes limb-swing-a {
+  0%, 100% { transform: rotate(calc(var(--swing, 32) * -1deg)); }
+  50% { transform: rotate(calc(var(--swing, 32) * 1deg)); }
+}
+@keyframes limb-swing-b {
+  0%, 100% { transform: rotate(calc(var(--swing, 32) * 1deg)); }
+  50% { transform: rotate(calc(var(--swing, 32) * -1deg)); }
+}
+
+/* Stumble: knocked backward, arms flailing, legs buckling. */
+.stickman.stumble {
+  animation: stick-stumble var(--stumble-dur, 0.95s) ease;
+}
+.stickman.stumble .arm-l,
+.stickman.stumble .arm-r {
+  animation: arm-flail var(--stumble-dur, 0.95s) ease;
+}
+.stickman.stumble .leg-l {
+  animation: leg-buckle var(--stumble-dur, 0.95s) ease;
+}
+.stickman.stumble .leg-r {
+  animation: leg-buckle-b var(--stumble-dur, 0.95s) ease;
+}
+
+@keyframes stick-stumble {
+  0% { transform: translateY(0) rotate(0deg); }
+  20% { transform: translateY(-2px) rotate(-17deg); }
+  45% { transform: translateY(0) rotate(11deg); }
+  70% { transform: translateY(-1px) rotate(-6deg); }
+  100% { transform: translateY(0) rotate(0deg); }
+}
+@keyframes arm-flail {
+  0%, 100% { transform: rotate(0deg); }
+  30% { transform: rotate(-55deg); }
+  60% { transform: rotate(40deg); }
+}
+@keyframes leg-buckle {
+  0%, 100% { transform: rotate(0deg); }
+  35% { transform: rotate(22deg); }
+  65% { transform: rotate(-12deg); }
+}
+@keyframes leg-buckle-b {
+  0%, 100% { transform: rotate(0deg); }
+  35% { transform: rotate(-18deg); }
+  65% { transform: rotate(14deg); }
 }
 
 /* podium pedestals rising */
@@ -101,8 +177,8 @@
 @media (prefers-reduced-motion: reduce) {
   .pop-in,
   .shake,
-  .race-runner.bounce,
-  .race-runner.stumble,
+  .stickman,
+  .stickman .limb,
   .podium-step,
   .confetti,
   .timer-ring.urgent {
