@@ -69,12 +69,12 @@ test('randomGait: every field lands inside its documented range', () => {
   for (let i = 0; i < 200; i++) {
     const g = randomGait();
     assert.ok(g.swing >= 24 && g.swing < 42, `swing ${g.swing}`);
-    assert.ok(g.dur >= 0.84 && g.dur < 1.32, `dur ${g.dur}`);
+    assert.ok(g.dur >= 1.68 && g.dur < 2.64, `dur ${g.dur}`);
     assert.ok(g.lean >= 6 && g.lean < 13, `lean ${g.lean}`);
     assert.ok(g.bob >= 2.5 && g.bob < 5, `bob ${g.bob}`);
-    assert.ok(g.phase > -1 && g.phase <= 0, `phase ${g.phase}`);
-    assert.ok(g.idleDur >= 3.6 && g.idleDur < 6, `idleDur ${g.idleDur}`);
-    assert.ok(g.stumbleDur >= 1.6 && g.stumbleDur < 2.2, `stumbleDur ${g.stumbleDur}`);
+    assert.ok(g.phase > -2 && g.phase <= 0, `phase ${g.phase}`);
+    assert.ok(g.idleDur >= 7.2 && g.idleDur < 12, `idleDur ${g.idleDur}`);
+    assert.ok(g.stumbleDur >= 3.2 && g.stumbleDur < 4.4, `stumbleDur ${g.stumbleDur}`);
   }
 });
 
