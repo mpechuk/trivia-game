@@ -4,6 +4,7 @@ import {
   candidateType,
   iceFailureHint,
   parseDebugFlag,
+  stalledIceHint,
   summarizeTypes,
 } from '../../js/net/debug.js';
 
@@ -36,6 +37,17 @@ test('candidateType extracts the ICE candidate type', () => {
 test('summarizeTypes renders counts compactly', () => {
   assert.equal(summarizeTypes({ host: 2, srflx: 1 }), 'host×2 srflx×1');
   assert.equal(summarizeTypes({}), 'none');
+});
+
+test('stalledIceHint diagnoses stuck/failed states, stays quiet on healthy ones', () => {
+  const counts = { host: 2, srflx: 4 };
+  // A long "checking" (the cellular CGNAT signature) gets the TURN hint.
+  assert.match(stalledIceHint('checking', counts), /TURN/);
+  assert.match(stalledIceHint('disconnected', counts), /TURN/);
+  assert.match(stalledIceHint('failed', counts), /TURN/);
+  assert.equal(stalledIceHint('connected', counts), null);
+  assert.equal(stalledIceHint('completed', counts), null);
+  assert.equal(stalledIceHint('new', counts), null);
 });
 
 test('iceFailureHint distinguishes the three failure shapes', () => {

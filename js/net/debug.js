@@ -29,6 +29,18 @@ export function summarizeTypes(counts) {
   return parts.length ? parts.join(' ') : 'none';
 }
 
+/**
+ * Hint to print for an ICE state that indicates trouble; null for healthy
+ * states. "checking" only counts as trouble once it has dragged on — the
+ * caller applies the delay.
+ */
+export function stalledIceHint(state, counts) {
+  if (state === 'checking' || state === 'disconnected' || state === 'failed') {
+    return iceFailureHint(counts);
+  }
+  return null;
+}
+
 /** Human hint for why ICE failed, given the local candidate type counts. */
 export function iceFailureHint(counts) {
   if (!counts.srflx && !counts.relay) {
@@ -142,10 +154,20 @@ function watchPeerConnection(pc, tag, counts) {
   pc.addEventListener('icecandidateerror', (e) => {
     netlog(tag, `ice server error ${e.errorCode} from ${e.url || '?'}: ${e.errorText || ''}`.trim());
   });
+  // ICE can sit in "checking" long past our dial watchdog without ever
+  // reaching "failed" — diagnose the stall, don't wait for the verdict.
+  let checkingTimer = null;
   pc.addEventListener('iceconnectionstatechange', () => {
     netlog(tag, `ice state: ${pc.iceConnectionState}`);
-    if (pc.iceConnectionState === 'failed') netlog(tag, `hint: ${iceFailureHint(counts)}`);
-    if (pc.iceConnectionState === 'connected' || pc.iceConnectionState === 'completed') {
+    clearTimeout(checkingTimer);
+    if (pc.iceConnectionState === 'failed') {
+      netlog(tag, `hint: ${iceFailureHint(counts)}`);
+    } else if (pc.iceConnectionState === 'checking') {
+      checkingTimer = setTimeout(() => {
+        const hint = stalledIceHint(pc.iceConnectionState, counts);
+        if (hint) netlog(tag, `hint: ${hint}`);
+      }, 10000);
+    } else if (pc.iceConnectionState === 'connected' || pc.iceConnectionState === 'completed') {
       logSelectedPair(pc, tag);
     }
   });
