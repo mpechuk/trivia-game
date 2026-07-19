@@ -5,7 +5,7 @@ import { GameEngine } from '../../game.js';
 import { MSG, msg } from '../../net/protocol.js';
 import { DIFFICULTY_LABELS } from '../../questions.js';
 import { el } from '../../util.js';
-import { answerTile, confettiBurst, podium, raceTrack, standingsList, timerRing } from '../components.js';
+import { answerTile, confettiBurst, podium, raceTrack, RACE_SETTLE_MS, standingsList, timerRing } from '../components.js';
 
 const SOLO_PLAYER_ID = 'you';
 
@@ -32,6 +32,7 @@ export const hostGameScreen = {
     const buttons = ctx.theme.answer_buttons;
     const unsubs = [];
     let confettiCleanup = null;
+    let raceTimer = 0;
 
     // ---------- layout ----------
     const progressEl = el('div', { class: 'game-progress' });
@@ -240,12 +241,16 @@ export const hostGameScreen = {
       track.update(standings, maxPossibleSoFar, false);
       requestAnimationFrame(() =>
         requestAnimationFrame(() => {
-          const moved = track.update(standings, maxPossibleSoFar, true);
+          const { moved, animationMs } = track.update(standings, maxPossibleSoFar, true);
           if (moved) ctx.audio.play('advance');
+          // Advance only once the run animation has finished, plus a short
+          // settle. The host can still skip ahead with the button below.
+          clearTimeout(raceTimer);
+          raceTimer = setTimeout(() => engine.advance(), animationMs + RACE_SETTLE_MS);
         })
       );
       renderSidebar(standings);
-      setControls(btn('Skip ▸', () => engine.advance(), 'btn btn-ghost'));
+      setControls(btn('Skip ▸', () => { clearTimeout(raceTimer); engine.advance(); }, 'btn btn-ghost'));
     }));
 
     unsubs.push(engine.events.on('gameover', ({ standings }) => {
@@ -318,6 +323,7 @@ export const hostGameScreen = {
     return () => {
       unsubs.forEach((u) => u());
       timer.stop();
+      clearTimeout(raceTimer);
       confettiCleanup?.();
       ctx.wakeLock.disable();
       if (net) {

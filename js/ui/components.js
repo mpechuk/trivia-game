@@ -156,6 +156,26 @@ export function racePosition(score, maxPossible) {
   return frac * 100;
 }
 
+// The horizontal glide (`left` transition on .race-runner) and the settle pause
+// the run screen holds after every figure has finished animating, both in ms.
+// RACE_GLIDE_MS must match the CSS transition duration in screens.css.
+export const RACE_GLIDE_MS = 1000;
+export const RACE_SETTLE_MS = 500;
+// A forward run is a loop, so we play a whole number of strides before settling.
+export const RUN_STRIDES = 2;
+
+/**
+ * How long (ms) a figure animates for a given mood and gait: a stumble is a
+ * one-shot the length of its --stumble-dur, a run plays RUN_STRIDES full
+ * strides, and an idle figure has nothing to wait for. Pure — exported for
+ * testing.
+ */
+export function moodDurationMs(mood, gait) {
+  if (mood === 'run') return Math.round(gait.dur * 1000) * RUN_STRIDES;
+  if (mood === 'stumble') return Math.round(gait.stumbleDur * 1000);
+  return 0;
+}
+
 /**
  * A randomized per-figure "gait" so no two stick figures animate identically.
  * Every field feeds a CSS custom property on the figure. Pure (modulo the RNG)
@@ -211,18 +231,19 @@ export function raceTrack() {
     );
     const lane = el('div', { class: 'race-lane' }, runner);
     lanesEl.append(lane);
-    const entry = { lane, runner, stickman, pos: 0, timer: 0 };
+    const entry = { lane, runner, stickman, gait, pos: 0, timer: 0 };
     lanes.set(p.id, entry);
     return entry;
   }
 
-  // Set the figure's mood. 'run'/'stumble' are transient bursts that settle
-  // back to 'idle'; 'idle' just parks it. Restarting the class re-triggers the
-  // keyframes so repeated moves in the same direction replay the animation.
-  function setMood(entry, mood, durMs = 4600) {
+  // Set the figure's mood and return how long that animation lasts (ms).
+  // 'run'/'stumble' are transient bursts that settle back to 'idle' exactly
+  // when their animation ends; 'idle' just parks it. Restarting the class
+  // forces a reflow so repeated moves in the same direction replay cleanly.
+  function setMood(entry, mood) {
+    const durMs = moodDurationMs(mood, entry.gait);
     clearTimeout(entry.timer);
     entry.stickman.classList.remove('idle', 'run', 'stumble');
-    // force a reflow so the keyframe animation restarts from the top
     void entry.stickman.offsetWidth;
     entry.stickman.classList.add(mood);
     if (mood !== 'idle') {
@@ -231,6 +252,7 @@ export function raceTrack() {
         entry.stickman.classList.add('idle');
       }, durMs);
     }
+    return durMs;
   }
 
   /**
@@ -242,10 +264,13 @@ export function raceTrack() {
    * @param standings engine standings
    * @param maxPossible max cumulative score so far (normalizes positions)
    * @param animate    when true, transition from previous positions
-   * @returns number of runners that moved (for the whoosh sound)
+   * @returns {{moved:number, animationMs:number}} how many runners moved (for
+   *   the whoosh sound) and how long to wait for this round's animations to
+   *   finish — the glide plus the longest run/stumble among the movers.
    */
   function update(standings, maxPossible, animate = true) {
     let moved = 0;
+    let animMs = RACE_GLIDE_MS;
     const leaderScore = standings.length ? standings[0].score : 0;
     for (const p of standings) {
       const entry = ensureLane(p);
@@ -260,10 +285,10 @@ export function raceTrack() {
       const mood = raceMood(entry.pos, pct);
       entry.runner.style.setProperty('--race-pos', `${pct}`);
       if (mood !== 'idle') moved++;
-      setMood(entry, mood);
+      animMs = Math.max(animMs, setMood(entry, mood));
       entry.pos = pct;
     }
-    return moved;
+    return { moved, animationMs: animMs };
   }
 
   return { el: root, update };

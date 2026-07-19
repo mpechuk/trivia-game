@@ -2,6 +2,8 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {
   RACE_MOVE_EPS,
+  RUN_STRIDES,
+  moodDurationMs,
   raceMood,
   racePosition,
   randomGait,
@@ -75,6 +77,32 @@ test('randomGait: every field lands inside its documented range', () => {
     assert.ok(g.phase > -2 && g.phase <= 0, `phase ${g.phase}`);
     assert.ok(g.idleDur >= 7.2 && g.idleDur < 12, `idleDur ${g.idleDur}`);
     assert.ok(g.stumbleDur >= 3.2 && g.stumbleDur < 4.4, `stumbleDur ${g.stumbleDur}`);
+  }
+});
+
+// ---- moodDurationMs: how long the run screen waits for each figure ----
+
+test('moodDurationMs: a run plays RUN_STRIDES full strides', () => {
+  const gait = { dur: 2, stumbleDur: 3 };
+  assert.equal(moodDurationMs('run', gait), 2000 * RUN_STRIDES);
+});
+
+test('moodDurationMs: a stumble lasts one --stumble-dur', () => {
+  assert.equal(moodDurationMs('stumble', { dur: 2, stumbleDur: 3 }), 3000);
+  assert.equal(moodDurationMs('stumble', { dur: 1, stumbleDur: 2.2 }), 2200);
+});
+
+test('moodDurationMs: an idle figure has nothing to wait for', () => {
+  assert.equal(moodDurationMs('idle', { dur: 2, stumbleDur: 3 }), 0);
+});
+
+test('moodDurationMs: every randomized gait yields a positive, finite duration', () => {
+  for (let i = 0; i < 200; i++) {
+    const g = randomGait();
+    for (const mood of ['run', 'stumble']) {
+      const ms = moodDurationMs(mood, g);
+      assert.ok(Number.isFinite(ms) && ms > 0, `${mood} -> ${ms}`);
+    }
   }
 });
 

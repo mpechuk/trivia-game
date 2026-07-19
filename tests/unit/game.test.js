@@ -6,7 +6,7 @@ import { GameEngine, TIMING } from '../../js/game.js';
 TIMING.introMs = 5;
 TIMING.graceMs = 5;
 TIMING.revealMs = 60_000; // tests drive reveal→race explicitly via advance()
-TIMING.raceMs = 60_000; // and race→next explicitly too
+// race→next has no engine timer (the host UI drives it); tests advance() it directly
 
 const SCORING = {
   base_points: 100,

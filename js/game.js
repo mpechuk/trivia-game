@@ -8,7 +8,9 @@ export const TIMING = {
   introMs: 2200, // "Question 3/15" splash
   graceMs: 400, // window after close for in-flight answers
   revealMs: 6000, // auto-advance from reveal if host doesn't click Next
-  raceMs: 3600, // race animation duration
+  // The race → next-question step is driven by the host UI once the run
+  // animation finishes (its length depends on the animation), not by a fixed
+  // engine timer — see hostGame's 'race' handler.
 };
 
 export class GameEngine {
@@ -183,7 +185,13 @@ export class GameEngine {
     this._after(TIMING.revealMs, () => this.advance());
   }
 
-  /** reveal → race → next question. Also bound to the host "Next" button. */
+  /**
+   * reveal → race → next question. Also bound to the host "Next"/"Skip"
+   * buttons. Entering 'race' does not schedule the next question: the host UI
+   * calls advance() again once the run animation has finished (plus a short
+   * settle), so the animation is never cut off. Calling advance() in any other
+   * phase is a no-op.
+   */
   advance() {
     if (this.phase === 'reveal') {
       this._clearTimers();
@@ -194,7 +202,6 @@ export class GameEngine {
         standings: this.getStandings(),
         maxPossibleSoFar: this.maxPossibleSoFar,
       });
-      this._after(TIMING.raceMs, () => this._nextQuestion());
     } else if (this.phase === 'race') {
       this._clearTimers();
       this._nextQuestion();
