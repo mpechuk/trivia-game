@@ -1,12 +1,13 @@
 // Host side of the PeerJS network: owns the room peer and the per-player
 // connections. Screens assign the onJoin/onAnswer/onDisconnect callbacks;
 // higher-level game logic lives in the screens, not here.
+import { buildPeerOptions } from './ice.js';
 import { MSG, ROOM_PREFIX, makeRoomCode, msg, validateMsg } from './protocol.js';
 
 export class HostNetwork {
   constructor({ roomCode, peerConfig }) {
     this.roomCode = roomCode;
-    this.peerConfig = peerConfig || undefined;
+    this.peerConfig = buildPeerOptions(peerConfig);
     this.connections = new Map(); // playerId -> DataConnection
     this.onJoin = null; // ({playerId, name, avatar, conn}) => void
     this.onAnswer = null; // ({playerId, questionIndex, choiceIndex}) => void

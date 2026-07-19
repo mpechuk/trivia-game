@@ -90,8 +90,12 @@ complete example):
 
 `network.peer_config` accepts PeerJS options (`host`, `port`, `path`, `secure`, `key`,
 `config.iceServers`) to use a self-hosted [PeerServer](https://github.com/peers/peerjs-server)
-or a TURN server — useful behind strict corporate NATs, where the default STUN-only setup
-may not connect.
+or your own TURN server. By default the game uses public STUN plus free public TURN relays
+(PeerJS community + Open Relay, including TLS on port 443) so players on a different network
+than the host — e.g. a phone on cellular data — can still connect. Public relays are shared,
+best-effort infrastructure; for guaranteed reliability at larger events, set
+`config.iceServers` to a TURN service you control (Cloudflare Calls, Twilio, metered.ca, or
+self-hosted coturn).
 
 ## Development
 

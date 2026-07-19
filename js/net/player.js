@@ -1,6 +1,7 @@
 // Player side of the PeerJS network. Dials the host's room peer, sends the
 // join, dispatches host messages as events, and auto-reconnects with backoff.
 import { createEmitter } from '../util.js';
+import { buildPeerOptions } from './ice.js';
 import { MSG, ROOM_PREFIX, msg, validateMsg } from './protocol.js';
 
 const BACKOFF_MS = [1000, 2000, 4000, 8000, 8000];
@@ -10,7 +11,7 @@ export class PlayerNetwork {
   constructor({ roomCode, profile, peerConfig }) {
     this.roomCode = roomCode;
     this.profile = profile;
-    this.peerConfig = peerConfig || undefined;
+    this.peerConfig = buildPeerOptions(peerConfig);
     this.events = createEmitter();
     this.closed = false;
     this.attempt = 0;
