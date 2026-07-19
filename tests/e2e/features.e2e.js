@@ -75,6 +75,18 @@ export async function run(errors) {
     }
     console.log('DEBUG PANEL OK — broker/ICE/data-channel lines on host and player, off by default');
 
+    // A failed join (no debug flag anywhere) offers "Show connection log",
+    // which replays the buffered network history after the fact.
+    await plain.goto(`${BASE}#/join/ZZZZZ`);
+    await plain.getByRole('button', { name: /Join game/ }).click();
+    await plain.locator('.status-line', { hasText: /Room not found/ }).waitFor({ timeout: 20000 });
+    await plain.getByRole('button', { name: /Show connection log/ }).click();
+    const buffered = await plain.locator('#net-debug').textContent();
+    if (!buffered.includes('dialing room ZZZZZ') || !buffered.includes('peer error')) {
+      throw new Error(`buffered connection log incomplete: ${buffered}`);
+    }
+    console.log('CONNECTION LOG OK — failed join offers the log; buffer replays history');
+
     await hostCtx.close();
     await p1Ctx.close();
   }

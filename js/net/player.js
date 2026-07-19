@@ -6,13 +6,18 @@ import { buildPeerOptions } from './ice.js';
 import { MSG, ROOM_PREFIX, msg, validateMsg } from './protocol.js';
 
 const BACKOFF_MS = [1000, 2000, 4000, 8000, 8000];
+// PeerJS has no timeouts of its own: a stalled broker websocket or a WebRTC
+// negotiation whose answer never arrives emits no event at all, leaving the
+// player on "Connecting…" forever. These watchdogs turn silence into a retry.
+const STALL_TIMEOUT_MS = 15000;
 
 export class PlayerNetwork {
   /** profile: {playerId, name, avatar} */
-  constructor({ roomCode, profile, peerConfig }) {
+  constructor({ roomCode, profile, peerConfig, stallTimeoutMs = STALL_TIMEOUT_MS }) {
     this.roomCode = roomCode;
     this.profile = profile;
     this.peerConfig = buildPeerOptions(peerConfig);
+    this.stallTimeoutMs = stallTimeoutMs;
     this.events = createEmitter();
     this.closed = false;
     this.attempt = 0;
@@ -30,7 +35,17 @@ export class PlayerNetwork {
     const peer = new Peer(this.peerConfig);
     this.peer = peer;
     instrumentPeer(peer, 'player');
-    peer.on('open', () => this._dial());
+    clearTimeout(this._brokerTimer);
+    this._brokerTimer = setTimeout(() => {
+      if (this.closed || this.peer !== peer) return;
+      netlog('player', `broker connection stalled for ${this.stallTimeoutMs}ms — starting over`);
+      peer.destroy();
+      this._scheduleRetry();
+    }, this.stallTimeoutMs);
+    peer.on('open', () => {
+      clearTimeout(this._brokerTimer);
+      this._dial();
+    });
     peer.on('error', (err) => {
       if (err.type === 'peer-unavailable') {
         // Room code doesn't exist (or host gone). Don't burn retries on it.
@@ -60,7 +75,16 @@ export class PlayerNetwork {
     const conn = this.peer.connect(ROOM_PREFIX + this.roomCode, { reliable: true });
     this.conn = conn;
     instrumentConnection(conn, 'player');
+    clearTimeout(this._dialTimer);
+    this._dialTimer = setTimeout(() => {
+      if (this.closed || this.conn !== conn) return;
+      netlog('player', `negotiation stalled for ${this.stallTimeoutMs}ms — retrying`);
+      this.conn = null;
+      try { conn.close(); } catch { /* never opened */ }
+      this._scheduleRetry();
+    }, this.stallTimeoutMs);
     conn.on('open', () => {
+      clearTimeout(this._dialTimer);
       this.attempt = 0;
       conn.send(msg(MSG.JOIN, this.profile));
     });
@@ -80,10 +104,16 @@ export class PlayerNetwork {
       this.events.emit(m.type, m);
     });
     conn.on('close', () => {
-      if (this.conn === conn) this._scheduleRetry();
+      if (this.conn === conn) {
+        clearTimeout(this._dialTimer);
+        this._scheduleRetry();
+      }
     });
     conn.on('error', () => {
-      if (this.conn === conn) this._scheduleRetry();
+      if (this.conn === conn) {
+        clearTimeout(this._dialTimer);
+        this._scheduleRetry();
+      }
     });
   }
 
@@ -125,6 +155,8 @@ export class PlayerNetwork {
 
   leave() {
     this.closed = true;
+    clearTimeout(this._brokerTimer);
+    clearTimeout(this._dialTimer);
     if (this._retryTimer) clearTimeout(this._retryTimer);
     try { this.conn?.close(); } catch { /* already gone */ }
     this.peer?.destroy();

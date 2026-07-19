@@ -1,6 +1,7 @@
 // Player join screen: room code + name + avatar, then dial the host.
 import { avatarPicker, randomName } from '../../avatars.js';
 import { applyRemoteColors } from '../../config.js';
+import { showNetLog } from '../../net/debug.js';
 import { normalizeRoomCode } from '../../net/protocol.js';
 import { PlayerNetwork, getPlayerId, loadProfile, saveProfile } from '../../net/player.js';
 import { el } from '../../util.js';
@@ -35,9 +36,26 @@ export const joinScreen = {
     const status = el('p', { class: 'status-line', role: 'status' });
     const joinBtn = el('button', { class: 'btn btn-primary btn-big', type: 'button', onclick: join }, '🎮 Join game');
 
+    // Diagnostics escape hatch: connecting from another network can fail in
+    // ways that are invisible without the ICE log. Offer it whenever the
+    // join drags on or fails.
+    const logBtn = el('button', {
+      class: 'btn btn-ghost btn-small', type: 'button',
+      onclick: () => {
+        showNetLog();
+        logBtn.remove();
+      },
+    }, '🔍 Show connection log');
+    let logBtnTimer = null;
+    function offerLog() {
+      if (!joined && !logBtn.isConnected) status.after(logBtn);
+    }
+
     function fail(text) {
       status.textContent = text;
       joinBtn.disabled = false;
+      clearTimeout(logBtnTimer);
+      offerLog();
       if (net) {
         net.leave();
         net = null;
@@ -85,7 +103,14 @@ export const joinScreen = {
       net.on('not_found', () => fail('Room not found — double-check the code.'));
       net.on('fatal', () => fail('Connection failed. Are you online?'));
       net.on('lost', () => fail('Could not reach the host. Try again.'));
+      net.on('reconnecting', ({ attempt }) => {
+        if (joined) return;
+        status.textContent = `Still trying to reach the game… (attempt ${attempt})`;
+        offerLog();
+      });
       net.connect();
+      clearTimeout(logBtnTimer);
+      logBtnTimer = setTimeout(offerLog, 6000);
     }
 
     container.append(
@@ -105,6 +130,7 @@ export const joinScreen = {
 
     return () => {
       // If we left the screen without completing a join, drop the connection.
+      clearTimeout(logBtnTimer);
       if (!joined && net) net.leave();
     };
   },

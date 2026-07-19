@@ -23,6 +23,11 @@ export class HostNetwork {
       const peer = new Peer(ROOM_PREFIX + this.roomCode, this.peerConfig);
       this.peer = peer;
       instrumentPeer(peer, 'host');
+      // A stalled broker websocket emits nothing — fail instead of hanging.
+      const timer = setTimeout(() => {
+        netlog('host', 'broker connection stalled — giving up');
+        onError(Object.assign(new Error('Timed out reaching the PeerJS broker'), { type: 'broker-timeout' }));
+      }, 15000);
       const onOpen = () => {
         cleanup();
         peer.on('error', (err) => this._runtimeError(err));
@@ -34,6 +39,7 @@ export class HostNetwork {
         reject(err);
       };
       const cleanup = () => {
+        clearTimeout(timer);
         peer.off('open', onOpen);
         peer.off('error', onError);
       };

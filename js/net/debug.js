@@ -1,8 +1,10 @@
-// Opt-in network diagnostics. Enable with ?debug=1 in the URL (the lobby
-// join link/QR carries the query string, so players' phones inherit it) or
-// localStorage.trivia_debug = '1'. Logs the broker/ICE/connection lifecycle
-// to the console and to an on-screen panel — "cannot connect" failures
-// happen on phones, where there are no devtools.
+// Network diagnostics. The broker/ICE/connection lifecycle is always
+// recorded into an in-memory ring buffer; showing it costs a tap, not a
+// page reload. The on-screen panel + console output turn on via ?debug=1
+// (the lobby join link/QR carries the query string, so players' phones
+// inherit it), localStorage.trivia_debug = '1', or at runtime through
+// showNetLog() — the join screen offers that when connecting drags on.
+// "Cannot connect" failures happen on phones, where there are no devtools.
 import { el } from '../util.js';
 
 // ---------- pure helpers (unit-tested) ----------
@@ -51,6 +53,16 @@ export function netDebugEnabled() {
   return enabled;
 }
 
+/** Turn the panel on at runtime and replay everything recorded so far. */
+export function showNetLog() {
+  if (netDebugEnabled()) return;
+  enabled = true;
+  for (const line of buffer) {
+    try { panelLine(line); } catch { /* diagnostics must never break the game */ }
+  }
+}
+
+const buffer = [];
 let panel = null;
 
 function panelLine(text) {
@@ -64,28 +76,28 @@ function panelLine(text) {
   panel.scrollTop = panel.scrollHeight;
 }
 
-/** Log one diagnostic line (no-op unless debug is enabled). */
+/** Record one diagnostic line; echo to console/panel when debug is on. */
 export function netlog(tag, ...parts) {
-  if (!netDebugEnabled()) return;
   const line = `${(performance.now() / 1000).toFixed(1)}s [${tag}] ${parts.join(' ')}`;
+  buffer.push(line);
+  if (buffer.length > 300) buffer.shift();
+  if (!netDebugEnabled()) return;
   console.info(line);
   try { panelLine(line); } catch { /* diagnostics must never break the game */ }
 }
 
 // ---------- instrumentation ----------
 
-/** Log the peer's broker lifecycle (registration, drops, errors). */
+/** Record the peer's broker lifecycle (registration, drops, errors). */
 export function instrumentPeer(peer, tag) {
-  if (!netDebugEnabled()) return;
   peer.on('open', (id) => netlog(tag, `broker connected, registered as ${id}`));
   peer.on('disconnected', () => netlog(tag, 'broker connection lost'));
   peer.on('close', () => netlog(tag, 'peer destroyed'));
   peer.on('error', (err) => netlog(tag, `peer error: ${err.type || err.message || err}`));
 }
 
-/** Log a DataConnection's open/close plus the underlying WebRTC/ICE progress. */
+/** Record a DataConnection's open/close plus the underlying WebRTC/ICE progress. */
 export function instrumentConnection(conn, tag) {
-  if (!netDebugEnabled()) return;
   const counts = {};
   netlog(tag, `negotiating with ${conn.peer}`);
   conn.on('open', () => netlog(tag, 'data channel open'));
