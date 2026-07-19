@@ -1,6 +1,6 @@
 // Game setup screen, used for both "Host multiplayer" and "Play solo".
 // All controls default to the config's game_defaults block.
-import { avatarPicker } from '../../avatars.js';
+import { avatarPicker, randomName } from '../../avatars.js';
 import { createRoom } from '../../net/host.js';
 import { loadProfile, saveProfile } from '../../net/player.js';
 import { MIX_PRESETS, buildPlan, categoriesOf, difficultyTargets, filterPool, DIFFICULTY_LABELS } from '../../questions.js';
@@ -134,7 +134,7 @@ export function hostSetupScreen(solo) {
       let picker = null;
       const nameInput = el('input', {
         class: 'input', type: 'text', maxlength: '24', placeholder: 'Your name',
-        value: profile.name || 'You',
+        value: profile.name || randomName(),
       });
       const soloIdentity = solo
         ? el('div', { class: 'setup-block' },

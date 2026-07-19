@@ -1,5 +1,5 @@
 // Player join screen: room code + name + avatar, then dial the host.
-import { avatarPicker } from '../../avatars.js';
+import { avatarPicker, randomName } from '../../avatars.js';
 import { applyRemoteColors } from '../../config.js';
 import { normalizeRoomCode } from '../../net/protocol.js';
 import { PlayerNetwork, getPlayerId, loadProfile, saveProfile } from '../../net/player.js';
@@ -29,7 +29,7 @@ export const joinScreen = {
       type: 'text',
       maxlength: '24',
       placeholder: 'Your name',
-      value: profile.name || '',
+      value: profile.name || randomName(),
     });
     const picker = avatarPicker(profile.avatar);
     const status = el('p', { class: 'status-line', role: 'status' });
