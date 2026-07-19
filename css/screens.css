@@ -533,14 +533,14 @@ button.answer-tile:hover:not(.locked) {
 
 .race-lane {
   position: relative;
-  height: 58px;
+  height: 82px;
   border-bottom: 1px dashed rgba(255, 255, 255, 0.12);
 }
 
 .race-runner {
   --race-pos: 0;
   position: absolute;
-  top: 2px;
+  top: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -549,11 +549,48 @@ button.answer-tile:hover:not(.locked) {
   transition: left 1s cubic-bezier(0.22, 0.9, 0.3, 1.15);
 }
 
+/* stick figure: avatar head riding on an SVG body */
+.stickman {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transform-origin: 50% 100%;
+}
+
+.stickman .avatar {
+  position: relative;
+  z-index: 1;
+}
+
+.stick-body {
+  width: 30px;
+  height: 34px;
+  margin-top: -3px;
+  color: rgba(255, 255, 255, 0.92);
+  overflow: visible;
+}
+
+.stick-body line {
+  stroke: currentColor;
+  stroke-width: 3;
+  stroke-linecap: round;
+}
+
+.stick-body .limb {
+  transform-box: fill-box;
+}
+
+.stick-body .arm-l { transform-origin: 100% 0%; }
+.stick-body .arm-r { transform-origin: 0% 0%; }
+.stick-body .leg-l { transform-origin: 100% 0%; }
+.stick-body .leg-r { transform-origin: 0% 0%; }
+
 .race-runner.leader::before {
   content: '👑';
   position: absolute;
-  top: -16px;
+  top: -14px;
   font-size: 0.9rem;
+  z-index: 2;
 }
 
 .race-runner.disconnected {

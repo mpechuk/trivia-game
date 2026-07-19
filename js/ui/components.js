@@ -109,10 +109,98 @@ export function standingsList(standings, { limit = 0, highlightId = null, showDe
   );
 }
 
+// A stick figure body (neck-down) drawn in SVG; the avatar rides on top as the
+// head. Limb <g> groups pivot at the shoulders/hips so CSS can swing them.
+const STICK_BODY_SVG = `
+<svg class="stick-body" viewBox="0 0 40 46" aria-hidden="true" focusable="false">
+  <line class="torso" x1="20" y1="2" x2="20" y2="26"/>
+  <g class="limb arm arm-l"><line x1="20" y1="8" x2="10" y2="19"/></g>
+  <g class="limb arm arm-r"><line x1="20" y1="8" x2="30" y2="19"/></g>
+  <g class="limb leg leg-l"><line x1="20" y1="26" x2="12" y2="44"/></g>
+  <g class="limb leg leg-r"><line x1="20" y1="26" x2="28" y2="44"/></g>
+</svg>`;
+
+function stickBodyNode() {
+  const tpl = document.createElement('template');
+  tpl.innerHTML = STICK_BODY_SVG.trim();
+  return tpl.content.firstElementChild;
+}
+
+function rand(lo, hi) {
+  return lo + Math.random() * (hi - lo);
+}
+
+// Below this per-round change (in normalized 0..100 units) a figure is treated
+// as standing still rather than genuinely moving.
+export const RACE_MOVE_EPS = 0.5;
+
 /**
- * The virtual "run": one lane per player, avatars advance toward the finish
- * flag proportionally to score. update() animates from the previous position
- * (including moving backwards after a penalty).
+ * How a stick figure should react to a per-round position change: gaining
+ * ground runs forward, losing ground stumbles back, no meaningful change idles
+ * in place. Both inputs are normalized positions in 0..100. Pure — exported for
+ * testing.
+ */
+export function raceMood(prevPct, newPct) {
+  const delta = newPct - prevPct;
+  if (delta > RACE_MOVE_EPS) return 'run';
+  if (delta < -RACE_MOVE_EPS) return 'stumble';
+  return 'idle';
+}
+
+/**
+ * Normalize a score into a 0..100 track position. Returns 0 when nothing has
+ * been scored yet (or scores are non-positive). Pure — exported for testing.
+ */
+export function racePosition(score, maxPossible) {
+  const frac = maxPossible > 0 ? clamp(score / maxPossible, 0, 1) : 0;
+  return frac * 100;
+}
+
+// The horizontal glide (`left` transition on .race-runner) and the settle pause
+// the run screen holds after every figure has finished animating, both in ms.
+// RACE_GLIDE_MS must match the CSS transition duration in screens.css.
+export const RACE_GLIDE_MS = 1000;
+export const RACE_SETTLE_MS = 500;
+// A forward run is a loop, so we play a whole number of strides before settling.
+export const RUN_STRIDES = 2;
+
+/**
+ * How long (ms) a figure animates for a given mood and gait: a stumble is a
+ * one-shot the length of its --stumble-dur, a run plays RUN_STRIDES full
+ * strides, and an idle figure has nothing to wait for. Pure — exported for
+ * testing.
+ */
+export function moodDurationMs(mood, gait) {
+  if (mood === 'run') return Math.round(gait.dur * 1000) * RUN_STRIDES;
+  if (mood === 'stumble') return Math.round(gait.stumbleDur * 1000);
+  return 0;
+}
+
+/**
+ * A randomized per-figure "gait" so no two stick figures animate identically.
+ * Every field feeds a CSS custom property on the figure. Pure (modulo the RNG)
+ * — exported for testing.
+ */
+export function randomGait() {
+  return {
+    swing: rand(24, 42),
+    dur: rand(1.68, 2.64),
+    lean: rand(6, 13),
+    bob: rand(2.5, 5),
+    phase: -rand(0, 2),
+    idleDur: rand(7.2, 12),
+    stumbleDur: rand(3.2, 4.4),
+  };
+}
+
+/**
+ * The virtual "run": one lane per player. Each player is a little stick figure
+ * wearing their avatar as a head, advancing toward the finish flag in
+ * proportion to their score. update() drives three per-round moods:
+ *   gained points  -> run forward (limbs pumping, leaning ahead)
+ *   lost points    -> stumble backward
+ *   no change      -> idle in place, shifting its weight while it waits.
+ * Each figure gets slightly randomized timing/amplitude so no two move alike.
  */
 export function raceTrack() {
   const lanesEl = el('div', { class: 'race-lanes' });
@@ -120,52 +208,87 @@ export function raceTrack() {
     el('div', { class: 'race-finish' }, '🏁'),
     lanesEl
   );
-  const lanes = new Map(); // playerId -> {lane, runner, pos}
+  const lanes = new Map(); // playerId -> {lane, runner, stickman, pos, timer}
 
   function ensureLane(p) {
     if (lanes.has(p.id)) return lanes.get(p.id);
+    const stickman = el('div', { class: 'stickman idle' },
+      renderAvatar(p.avatar, 32, p.name),
+      stickBodyNode()
+    );
+    // Per-figure variation, set once so each runner keeps its own gait.
+    const gait = randomGait();
+    stickman.style.setProperty('--swing', gait.swing.toFixed(1));
+    stickman.style.setProperty('--dur', `${gait.dur.toFixed(2)}s`);
+    stickman.style.setProperty('--lean', gait.lean.toFixed(1));
+    stickman.style.setProperty('--bob', gait.bob.toFixed(1));
+    stickman.style.setProperty('--phase', `${gait.phase.toFixed(2)}s`);
+    stickman.style.setProperty('--idle-dur', `${gait.idleDur.toFixed(2)}s`);
+    stickman.style.setProperty('--stumble-dur', `${gait.stumbleDur.toFixed(2)}s`);
     const runner = el('div', { class: 'race-runner' },
-      renderAvatar(p.avatar, 44, p.name),
+      stickman,
       el('span', { class: 'race-name' }, p.name)
     );
     const lane = el('div', { class: 'race-lane' }, runner);
     lanesEl.append(lane);
-    const entry = { lane, runner, pos: 0 };
+    const entry = { lane, runner, stickman, gait, pos: 0, timer: 0 };
     lanes.set(p.id, entry);
     return entry;
   }
 
+  // Set the figure's mood and return how long that animation lasts (ms).
+  // 'run'/'stumble' are transient bursts that settle back to 'idle' exactly
+  // when their animation ends; 'idle' just parks it. Restarting the class
+  // forces a reflow so repeated moves in the same direction replay cleanly.
+  function setMood(entry, mood) {
+    const durMs = moodDurationMs(mood, entry.gait);
+    clearTimeout(entry.timer);
+    entry.stickman.classList.remove('idle', 'run', 'stumble');
+    void entry.stickman.offsetWidth;
+    entry.stickman.classList.add(mood);
+    if (mood !== 'idle') {
+      entry.timer = setTimeout(() => {
+        entry.stickman.classList.remove('run', 'stumble');
+        entry.stickman.classList.add('idle');
+      }, durMs);
+    }
+    return durMs;
+  }
+
   /**
+   * Called twice per round by the host screen: first with animate=false to
+   * paint the previous positions, then with animate=true to glide to the new
+   * ones. We only commit the baseline (and pick a mood) on the animated pass,
+   * so the run/stumble/idle decision reflects the real per-round movement.
+   *
    * @param standings engine standings
    * @param maxPossible max cumulative score so far (normalizes positions)
    * @param animate    when true, transition from previous positions
-   * @returns number of runners that moved (for the whoosh sound)
+   * @returns {{moved:number, animationMs:number}} how many runners moved (for
+   *   the whoosh sound) and how long to wait for this round's animations to
+   *   finish — the glide plus the longest run/stumble among the movers.
    */
   function update(standings, maxPossible, animate = true) {
     let moved = 0;
+    let animMs = RACE_GLIDE_MS;
     const leaderScore = standings.length ? standings[0].score : 0;
     for (const p of standings) {
       const entry = ensureLane(p);
-      const frac = maxPossible > 0 ? clamp(p.score / maxPossible, 0, 1) : 0;
-      const pct = frac * 100;
-      const apply = () => {
-        entry.runner.style.setProperty('--race-pos', `${pct}`);
-        entry.runner.classList.toggle('leader', p.score === leaderScore && p.score > 0);
-        entry.runner.classList.toggle('disconnected', p.connected === false);
-      };
-      if (Math.abs(pct - entry.pos) > 0.5) {
-        moved++;
-        entry.runner.classList.remove('bounce', 'stumble');
-        if (animate) {
-          // restart the keyframe animation
-          void entry.runner.offsetWidth;
-          entry.runner.classList.add(pct > entry.pos ? 'bounce' : 'stumble');
-        }
+      const pct = racePosition(p.score, maxPossible);
+      entry.runner.classList.toggle('leader', p.score === leaderScore && p.score > 0);
+      entry.runner.classList.toggle('disconnected', p.connected === false);
+      if (!animate) {
+        // Prime pass: hold the previous position so the next pass can glide.
+        entry.runner.style.setProperty('--race-pos', `${entry.pos}`);
+        continue;
       }
+      const mood = raceMood(entry.pos, pct);
+      entry.runner.style.setProperty('--race-pos', `${pct}`);
+      if (mood !== 'idle') moved++;
+      animMs = Math.max(animMs, setMood(entry, mood));
       entry.pos = pct;
-      apply();
     }
-    return moved;
+    return { moved, animationMs: animMs };
   }
 
   return { el: root, update };

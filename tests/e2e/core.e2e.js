@@ -121,7 +121,36 @@ export async function run(errors) {
       console.log(`  ${name}:`, (await p.locator('.player-result h2').textContent()).trim());
     }
     await host.locator('.race-track').waitFor({ timeout: 15000 });
-    console.log('  Q1 OK (answers, lock, reveal, race)');
+
+    // Each racer is a stick figure: the avatar rides as the head on an SVG body
+    // with two arms and two legs, carries exactly one mood (run/stumble/idle),
+    // and every figure gets its own randomized gait so no two animate alike.
+    const race = await host.evaluate(() => {
+      const gaitVars = ['--swing', '--dur', '--lean', '--bob', '--phase', '--idle-dur', '--stumble-dur'];
+      const figs = [...document.querySelectorAll('.race-track .stickman')];
+      return figs.map((f) => {
+        const cs = getComputedStyle(f);
+        return {
+          hasHead: !!f.querySelector('.avatar'),
+          hasBody: !!f.querySelector('svg.stick-body'),
+          legs: f.querySelectorAll('.stick-body .leg').length,
+          arms: f.querySelectorAll('.stick-body .arm').length,
+          moods: ['run', 'stumble', 'idle'].filter((m) => f.classList.contains(m)),
+          gait: gaitVars.map((v) => cs.getPropertyValue(v).trim()).join('|'),
+        };
+      });
+    });
+    if (race.length !== 2) throw new Error(`expected 2 stick figures, got ${race.length}`);
+    for (const f of race) {
+      if (!f.hasHead) throw new Error('stick figure is missing its avatar head');
+      if (!f.hasBody) throw new Error('stick figure is missing its SVG body');
+      if (f.legs !== 2 || f.arms !== 2) throw new Error(`stick figure limbs wrong: ${JSON.stringify(f)}`);
+      if (f.moods.length !== 1) throw new Error(`stick figure must carry exactly one mood, has: ${f.moods}`);
+    }
+    if (new Set(race.map((f) => f.gait)).size !== race.length) {
+      throw new Error(`stick figures share a gait (should be randomized): ${race.map((f) => f.gait)}`);
+    }
+    console.log('  Q1 OK (answers, lock, reveal, race with animated stick figures)');
 
     // A stranger trying to join mid-game is turned away.
     const lateCtx = await browser.newContext();
