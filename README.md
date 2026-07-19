@@ -90,12 +90,48 @@ complete example):
 
 `network.peer_config` accepts PeerJS options (`host`, `port`, `path`, `secure`, `key`,
 `config.iceServers`) to use a self-hosted [PeerServer](https://github.com/peers/peerjs-server)
-or your own TURN server. By default the game uses public STUN plus free public TURN relays
-(PeerJS community + Open Relay, including TLS on port 443) so players on a different network
-than the host — e.g. a phone on cellular data — can still connect. Public relays are shared,
-best-effort infrastructure; for guaranteed reliability at larger events, set
-`config.iceServers` to a TURN service you control (Cloudflare Calls, Twilio, metered.ca, or
-self-hosted coturn).
+or your own TURN relay — see the connectivity section below.
+
+## Multiplayer connectivity & debugging
+
+Players connect straight to the host's browser tab over WebRTC. When a player is on a
+different network than the host — typically a phone on cellular data — the connection may
+need a TURN relay: carrier-grade NAT often can't be traversed with STUN alone. **There are
+no free public TURN servers left** (the relays PeerJS ships as defaults have dead DNS, and
+Open Relay rejects every port — verified July 2026), so by default the game uses live public
+STUN servers only, which covers the friendlier NAT combinations.
+
+To see exactly where a connection fails, add `?debug=1` to the URL **before hosting**
+(e.g. `https://…/trivia-game/?debug=1`). An on-screen log panel appears for the host and —
+because the lobby QR/join link carries the flag — on players' phones too, showing broker
+registration, ICE candidates (`host`/`srflx`/`relay`), state changes, and which candidate
+pair finally connected. `ice state: failed` after only `host`/`srflx` candidates means this
+network pair requires TURN.
+
+To add TURN, get free-tier credentials (e.g. [metered.ca](https://www.metered.ca/stun-turn)
+or [expressturn.com](https://www.expressturn.com), or self-hosted
+[coturn](https://github.com/coturn/coturn)) and put them in your pack — prefer an endpoint
+on `:443?transport=tcp`, which passes the most restrictive networks:
+
+```json
+"game_defaults": {
+  "network": {
+    "peer_config": {
+      "config": {
+        "iceServers": [
+          { "urls": "stun:stun.l.google.com:19302" },
+          { "urls": "turn:YOUR_TURN_HOST:443?transport=tcp",
+            "username": "USER", "credential": "SECRET" }
+        ]
+      }
+    }
+  }
+}
+```
+
+Configuring the **host alone is enough** for most cases: a relay candidate on either side is
+publicly reachable by the other. Players who join via the lobby QR/link inherit the host's
+config automatically (the link carries `?config=`).
 
 ## Development
 

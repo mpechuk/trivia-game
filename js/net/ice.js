@@ -1,44 +1,22 @@
 // Default WebRTC ICE configuration for host/player peers.
 //
-// PeerJS's built-in default is one Google STUN server plus the community TURN
-// relays on UDP/TCP 3478. That works when host and players share a network,
-// but a phone on cellular data sits behind carrier-grade NAT that usually
-// requires a TURN relay — and many carrier/guest networks only let TURN
-// through on port 443 (ideally TLS). This default set keeps the easy STUN
-// path, keeps the PeerJS relays, and adds relays reachable on 80/443 with a
-// TLS+TCP fallback so cross-network joins can complete.
+// PeerJS's built-in default lists TURN relays that no longer exist: DNS for
+// eu-0/us-0.turn.peerjs.com is gone and openrelay.metered.ca rejects every
+// port/transport (verified empirically, July 2026 — zero relay candidates,
+// only 701 lookup errors that slow ICE gathering down). There is no reliable
+// free public TURN service to hardcode, so the defaults here are live STUN
+// servers only; they cover NAT combinations where a direct (srflx) path
+// exists.
 //
-// Packs can replace the whole list via
-// `game_defaults.network.peer_config.config.iceServers` (e.g. to use their
-// own TURN credentials); anything they provide wins untouched.
+// Connections that need a relay (typically cellular carrier-grade NAT)
+// require real TURN credentials via
+// `game_defaults.network.peer_config.config.iceServers` — see README →
+// "Multiplayer connectivity". Configuring the host alone is enough: a relay
+// candidate on either side is publicly reachable by the other. Anything a
+// pack provides replaces this list untouched.
 export const DEFAULT_ICE_SERVERS = [
-  // STUN: cheap reflexive candidates; resolves the friendly-NAT cases.
   { urls: ['stun:stun.l.google.com:19302', 'stun:stun1.l.google.com:19302'] },
   { urls: 'stun:stun.cloudflare.com:3478' },
-  // PeerJS community TURN (the library's own default relays), plus explicit
-  // TCP fallback for networks that drop UDP.
-  {
-    urls: [
-      'turn:eu-0.turn.peerjs.com:3478',
-      'turn:us-0.turn.peerjs.com:3478',
-      'turn:eu-0.turn.peerjs.com:3478?transport=tcp',
-      'turn:us-0.turn.peerjs.com:3478?transport=tcp',
-    ],
-    username: 'peerjs',
-    credential: 'peerjsp',
-  },
-  // Open Relay Project public TURN (intentionally public credentials, see
-  // metered.ca/tools/openrelay) — reachable on 80/443 including TLS, which is
-  // what cellular and locked-down guest networks typically need.
-  {
-    urls: [
-      'turn:openrelay.metered.ca:80',
-      'turn:openrelay.metered.ca:443',
-      'turns:openrelay.metered.ca:443?transport=tcp',
-    ],
-    username: 'openrelayproject',
-    credential: 'openrelayproject',
-  },
 ];
 
 /**

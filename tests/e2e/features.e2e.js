@@ -1,6 +1,6 @@
-// Feature scenarios: JSON-driven theming, reload-reconnect with state resync,
-// the host End-question button, Play again with the same room, and the
-// GitHub-Pages subpath invariant.
+// Feature scenarios: JSON-driven theming, the ?debug=1 network diagnostics
+// panel, reload-reconnect with state resync, the host End-question button,
+// Play again with the same room, and the GitHub-Pages subpath invariant.
 import { BASE, SUBPATH_URL, THEME_BASE, launchBrowser, setupGame, watch } from './helpers.js';
 
 export async function run(errors) {
@@ -28,6 +28,55 @@ export async function run(errors) {
     if (!vars.title.includes('Theme Test')) throw new Error(`title not applied: ${vars.title}`);
     console.log('THEME OK — colors, font, and title all come from the JSON');
     await ctx.close();
+  }
+
+  // ---------- ?debug=1 network diagnostics panel ----------
+  {
+    const hostCtx = await browser.newContext();
+    const p1Ctx = await browser.newContext();
+    const host = await hostCtx.newPage();
+    const p1 = await p1Ctx.newPage();
+    watch(host, 'dbg-host', errors);
+    watch(p1, 'dbg-p1', errors);
+
+    await host.goto(`${BASE}&debug=1`);
+    await host.getByRole('button', { name: /Host multiplayer/ }).click();
+    await setupGame(host, { count: '3', timer: '30' });
+    await host.getByRole('button', { name: /Create room/ }).click();
+    await host.locator('.lobby-code').waitFor({ timeout: 20000 });
+    const code = (await host.locator('.lobby-code').textContent()).trim();
+    const hostLog = await host.locator('#net-debug').textContent();
+    if (!hostLog.includes('broker connected')) {
+      throw new Error(`host debug panel missing broker line: ${hostLog}`);
+    }
+
+    await p1.goto(`${BASE}&debug=1#/join/${code}`);
+    await p1.locator('input.input:not(.input-code)').first().fill('Anna');
+    await p1.getByRole('button', { name: /Join game/ }).click();
+    await p1.locator('.player-waiting').waitFor({ timeout: 20000 });
+    await p1
+      .locator('#net-debug .net-debug-line', { hasText: 'data channel open' })
+      .waitFor({ timeout: 10000 });
+    const p1Log = await p1.locator('#net-debug').textContent();
+    if (!/local candidate/.test(p1Log)) {
+      throw new Error(`player debug panel missing ICE candidate lines: ${p1Log}`);
+    }
+    if (!p1Log.includes('ice state:')) {
+      throw new Error(`player debug panel missing ICE state lines: ${p1Log}`);
+    }
+
+    // And it stays off without the flag.
+    const plain = await p1Ctx.newPage();
+    watch(plain, 'dbg-plain', errors);
+    await plain.goto(BASE);
+    await plain.getByRole('button', { name: /Play solo/ }).waitFor({ timeout: 10000 });
+    if (await plain.locator('#net-debug').count()) {
+      throw new Error('debug panel rendered without ?debug=1');
+    }
+    console.log('DEBUG PANEL OK — broker/ICE/data-channel lines on host and player, off by default');
+
+    await hostCtx.close();
+    await p1Ctx.close();
   }
 
   // ---------- reconnect, End-question, Play again ----------

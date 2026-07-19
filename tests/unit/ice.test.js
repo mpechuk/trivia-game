@@ -4,21 +4,15 @@ import { DEFAULT_ICE_SERVERS, buildPeerOptions } from '../../js/net/ice.js';
 
 const flatUrls = (servers) => servers.flatMap((s) => (Array.isArray(s.urls) ? s.urls : [s.urls]));
 
-test('default ICE set covers STUN, TURN, and TCP/TLS-on-443 fallbacks', () => {
+test('default ICE set is multiple live STUN servers, no dead relays', () => {
   const urls = flatUrls(DEFAULT_ICE_SERVERS);
-  assert.ok(urls.some((u) => u.startsWith('stun:')));
-  // Cross-network (cellular) joins need a relay, not just STUN.
-  assert.ok(urls.some((u) => u.startsWith('turn:')));
-  // Carrier/guest networks often drop UDP and non-443 ports.
-  assert.ok(urls.some((u) => u.includes('transport=tcp')));
-  assert.ok(urls.some((u) => u.includes(':443')));
-  assert.ok(urls.some((u) => u.startsWith('turns:')));
-  // Relay entries must carry credentials or the browser rejects them.
-  for (const s of DEFAULT_ICE_SERVERS) {
-    const relays = (Array.isArray(s.urls) ? s.urls : [s.urls]).filter((u) => u.startsWith('turn'));
-    if (relays.length) {
-      assert.ok(s.username && s.credential, `credentials missing for ${relays[0]}`);
-    }
+  assert.ok(urls.length >= 2);
+  for (const u of urls) assert.match(u, /^stun:/);
+  // These relay hosts no longer exist (dead DNS / closed ports); listing them
+  // slows ICE gathering on every connection. Keep them out.
+  for (const u of urls) {
+    assert.ok(!u.includes('turn.peerjs.com'), `dead relay in defaults: ${u}`);
+    assert.ok(!u.includes('openrelay.metered.ca'), `dead relay in defaults: ${u}`);
   }
 });
 

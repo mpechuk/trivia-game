@@ -1,6 +1,7 @@
 // Player side of the PeerJS network. Dials the host's room peer, sends the
 // join, dispatches host messages as events, and auto-reconnects with backoff.
 import { createEmitter } from '../util.js';
+import { instrumentConnection, instrumentPeer, netlog } from './debug.js';
 import { buildPeerOptions } from './ice.js';
 import { MSG, ROOM_PREFIX, msg, validateMsg } from './protocol.js';
 
@@ -25,8 +26,10 @@ export class PlayerNetwork {
   connect() {
     if (this.closed) return;
     if (this.peer && !this.peer.destroyed) this.peer.destroy();
+    netlog('player', `connecting to broker ${this.peerConfig.host || 'peerjs cloud'}…`);
     const peer = new Peer(this.peerConfig);
     this.peer = peer;
+    instrumentPeer(peer, 'player');
     peer.on('open', () => this._dial());
     peer.on('error', (err) => {
       if (err.type === 'peer-unavailable') {
@@ -53,8 +56,10 @@ export class PlayerNetwork {
       this.conn = null;
       try { old.close(); } catch { /* already gone */ }
     }
+    netlog('player', `dialing room ${this.roomCode}`);
     const conn = this.peer.connect(ROOM_PREFIX + this.roomCode, { reliable: true });
     this.conn = conn;
+    instrumentConnection(conn, 'player');
     conn.on('open', () => {
       this.attempt = 0;
       conn.send(msg(MSG.JOIN, this.profile));
@@ -85,10 +90,12 @@ export class PlayerNetwork {
   _scheduleRetry() {
     if (this.closed || this._retryTimer) return;
     if (this.attempt >= BACKOFF_MS.length) {
+      netlog('player', 'gave up after all retries');
       this.events.emit('lost', {});
       return;
     }
     const wait = BACKOFF_MS[this.attempt++];
+    netlog('player', `retry ${this.attempt}/${BACKOFF_MS.length} in ${wait}ms`);
     this.events.emit('reconnecting', { attempt: this.attempt, waitMs: wait });
     this._retryTimer = setTimeout(() => {
       this._retryTimer = null;
