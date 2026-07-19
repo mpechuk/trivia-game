@@ -4,7 +4,9 @@ import {
   DICEBEAR_STYLES,
   EMOJI_CHOICES,
   dicebearUrl,
+  randomAdventurerAvatar,
   randomEmojiAvatar,
+  randomName,
   randomSeed,
   sanitizeAvatar,
 } from '../../js/avatars.js';
@@ -57,4 +59,20 @@ test('random helpers produce valid values', () => {
   const a = randomEmojiAvatar();
   assert.equal(a.kind, 'emoji');
   assert.ok(EMOJI_CHOICES.includes(a.value));
+});
+
+test('randomAdventurerAvatar is a shuffled dicebear adventurer', () => {
+  const a = randomAdventurerAvatar();
+  assert.equal(a.kind, 'dicebear');
+  assert.equal(a.style, 'adventurer');
+  // survives sanitization unchanged (valid style + seed)
+  assert.deepEqual(sanitizeAvatar(a), a);
+  // shuffled: two draws almost never collide
+  assert.notEqual(randomAdventurerAvatar().seed, randomAdventurerAvatar().seed);
+});
+
+test('randomName is a fun, non-empty name within the 24-char cap', () => {
+  const n = randomName();
+  assert.match(n, /^[A-Za-z]+\d{2}$/);
+  assert.ok(n.length > 0 && n.length <= 24);
 });

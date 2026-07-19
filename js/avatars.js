@@ -29,6 +29,28 @@ export function randomEmojiAvatar() {
   return { kind: 'emoji', value: EMOJI_CHOICES[Math.floor(Math.random() * EMOJI_CHOICES.length)] };
 }
 
+// The default avatar: a freshly-shuffled DiceBear "adventurer" character.
+export function randomAdventurerAvatar() {
+  return { kind: 'dicebear', style: 'adventurer', seed: randomSeed() };
+}
+
+const NAME_ADJECTIVES = [
+  'Brave', 'Swift', 'Clever', 'Mighty', 'Sneaky', 'Cosmic', 'Turbo', 'Wild',
+  'Lucky', 'Fuzzy', 'Sunny', 'Zesty', 'Rowdy', 'Nimble', 'Dizzy', 'Jolly',
+];
+const NAME_NOUNS = [
+  'Otter', 'Falcon', 'Panda', 'Ninja', 'Wizard', 'Comet', 'Tiger', 'Yeti',
+  'Koala', 'Dragon', 'Penguin', 'Fox', 'Llama', 'Narwhal', 'Raccoon', 'Badger',
+];
+
+/** A fun random display name, e.g. "SwiftOtter42" (fits the 24-char cap). */
+export function randomName() {
+  const adj = NAME_ADJECTIVES[Math.floor(Math.random() * NAME_ADJECTIVES.length)];
+  const noun = NAME_NOUNS[Math.floor(Math.random() * NAME_NOUNS.length)];
+  const num = Math.floor(Math.random() * 90) + 10;
+  return `${adj}${noun}${num}`;
+}
+
 /** Sanitize an avatar object arriving from the network. */
 export function sanitizeAvatar(avatar) {
   if (avatar && avatar.kind === 'emoji' && typeof avatar.value === 'string' && avatar.value.trim()) {
@@ -85,7 +107,7 @@ function initialCircle(name, px) {
  * Returns {el, getAvatar}. Small enough to embed in solo setup and join.
  */
 export function avatarPicker(initial) {
-  let avatar = sanitizeAvatar(initial || randomEmojiAvatar());
+  let avatar = sanitizeAvatar(initial || randomAdventurerAvatar());
   let dicebear = avatar.kind === 'dicebear'
     ? { style: avatar.style, seed: avatar.seed }
     : { style: DICEBEAR_STYLES[0], seed: randomSeed() };
