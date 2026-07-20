@@ -1,0 +1,1782 @@
+{
+  "title": "2026 FIFA World Cup Trivia",
+  "description": "100+ trivia questions about the 2026 FIFA World Cup (Canada/Mexico/USA), covering players, teams, host venues, and tournament details. Sourced from live tournament coverage through the July 15, 2026 semifinals. Ordered from easiest to hardest.",
+  "generated_on": "2026-07-15",
+  "current_through": "Semifinals complete (Spain 2-0 France; Argentina 2-1 England). Final: Argentina vs Spain, July 19, 2026 — not yet played.",
+  "total_questions": 105,
+  "category_breakdown": {
+    "Game Details": 23,
+    "Venues": 24,
+    "Players": 28,
+    "Teams": 30
+  },
+  "difficulty_breakdown": {
+    "Easy": 20,
+    "Medium": 25,
+    "Hard": 25,
+    "Very Hard": 22,
+    "Expert": 13
+  },
+  "image_note": "photo_link/answer_photo values are national flag images from the free flagcdn.com CDN, used as generic theme photos as permitted by the request. Swap in specific action photos/headshots if you'd like more bespoke images.",
+  "theme": {
+    "emoji": "⚽",
+    "logo_url": null,
+    "font_family": "'Trebuchet MS', 'Segoe UI', system-ui, sans-serif",
+    "colors": {
+      "background": "#0b1d3a",
+      "background_gradient": [
+        "#0b1d3a",
+        "#123c69"
+      ],
+      "surface": "#16294d",
+      "text": "#f5f7fb",
+      "text_muted": "#9fb0cc",
+      "primary": "#2dd4bf",
+      "accent": "#facc15",
+      "correct": "#22c55e",
+      "wrong": "#ef4444",
+      "timer": "#facc15"
+    },
+    "answer_buttons": [
+      {
+        "color": "#e21b3c",
+        "shape": "▲"
+      },
+      {
+        "color": "#1368ce",
+        "shape": "◆"
+      },
+      {
+        "color": "#d89e00",
+        "shape": "●"
+      },
+      {
+        "color": "#26890c",
+        "shape": "■"
+      },
+      {
+        "color": "#8e24aa",
+        "shape": "★"
+      }
+    ],
+    "background_image": null,
+    "sounds": {
+      "enabled": true,
+      "volume": 0.6,
+      "tick": null,
+      "tick_urgent": null,
+      "correct": null,
+      "wrong": null,
+      "reveal": null,
+      "advance": null,
+      "join": null,
+      "fanfare": null
+    }
+  },
+  "game_defaults": {
+    "question_count": 15,
+    "time_per_question_seconds": 30,
+    "choices_per_question": 4,
+    "difficulty_mix": "balanced",
+    "categories": "all",
+    "question_order": "ramp",
+    "scoring": {
+      "base_points": 100,
+      "max_speed_bonus": 100,
+      "difficulty_multiplier": [
+        1,
+        1.25,
+        1.5,
+        1.75,
+        2
+      ],
+      "wrong_penalty_max": 50,
+      "min_score": 0
+    },
+    "network": {
+      "peer_config": null
+    }
+  },
+  "questions": [
+    {
+      "id": 1,
+      "category": "Game Details",
+      "difficulty": 1,
+      "difficulty_label": "Easy",
+      "question": "How many national teams competed in the 2026 FIFA World Cup?",
+      "photo_link": "https://flagcdn.com/w320/us.png",
+      "answer": "48",
+      "answer_photo": null,
+      "wrong_answers": [
+        "32",
+        "40",
+        "64",
+        "24"
+      ]
+    },
+    {
+      "id": 2,
+      "category": "Venues",
+      "difficulty": 1,
+      "difficulty_label": "Easy",
+      "question": "Which three countries co-hosted the 2026 FIFA World Cup?",
+      "photo_link": "https://flagcdn.com/w320/mx.png",
+      "answer": "United States, Canada and Mexico",
+      "answer_photo": "https://flagcdn.com/w320/ca.png",
+      "wrong_answers": [
+        "United States, Brazil and Argentina",
+        "Spain, Portugal and Morocco",
+        "Qatar, UAE and Saudi Arabia",
+        "United States, Mexico and Colombia"
+      ]
+    },
+    {
+      "id": 3,
+      "category": "Game Details",
+      "difficulty": 1,
+      "difficulty_label": "Easy",
+      "question": "What is the name of the official 2026 World Cup match ball?",
+      "photo_link": "https://flagcdn.com/w320/mx.png",
+      "answer": "adidas Trionda",
+      "answer_photo": null,
+      "wrong_answers": [
+        "adidas Al Rihla",
+        "adidas Telstar 18",
+        "adidas Brazuca",
+        "adidas Jabulani"
+      ]
+    },
+    {
+      "id": 4,
+      "category": "Players",
+      "difficulty": 1,
+      "difficulty_label": "Easy",
+      "question": "Which Argentine superstar captained his team to the 2026 World Cup final?",
+      "photo_link": "https://flagcdn.com/w320/ar.png",
+      "answer": "Lionel Messi",
+      "answer_photo": "https://flagcdn.com/w320/ar.png",
+      "wrong_answers": [
+        "Cristiano Ronaldo",
+        "Kylian Mbappé",
+        "Neymar",
+        "Ángel Di María"
+      ]
+    },
+    {
+      "id": 5,
+      "category": "Venues",
+      "difficulty": 1,
+      "difficulty_label": "Easy",
+      "question": "In which New Jersey stadium is the 2026 World Cup final being played?",
+      "photo_link": "https://flagcdn.com/w320/us.png",
+      "answer": "MetLife Stadium",
+      "answer_photo": null,
+      "wrong_answers": [
+        "AT&T Stadium",
+        "SoFi Stadium",
+        "Lincoln Financial Field",
+        "Gillette Stadium"
+      ]
+    },
+    {
+      "id": 6,
+      "category": "Teams",
+      "difficulty": 1,
+      "difficulty_label": "Easy",
+      "question": "Which nation entered the 2026 World Cup as the defending champion?",
+      "photo_link": "https://flagcdn.com/w320/ar.png",
+      "answer": "Argentina",
+      "answer_photo": "https://flagcdn.com/w320/ar.png",
+      "wrong_answers": [
+        "France",
+        "Brazil",
+        "Germany",
+        "Spain"
+      ]
+    },
+    {
+      "id": 7,
+      "category": "Game Details",
+      "difficulty": 1,
+      "difficulty_label": "Easy",
+      "question": "On what date is the 2026 FIFA World Cup final scheduled?",
+      "photo_link": "https://flagcdn.com/w320/us.png",
+      "answer": "July 19, 2026",
+      "answer_photo": null,
+      "wrong_answers": [
+        "July 12, 2026",
+        "July 26, 2026",
+        "June 28, 2026",
+        "July 4, 2026"
+      ]
+    },
+    {
+      "id": 8,
+      "category": "Players",
+      "difficulty": 1,
+      "difficulty_label": "Easy",
+      "question": "Which Portuguese icon confirmed the 2026 tournament as his last World Cup?",
+      "photo_link": "https://flagcdn.com/w320/pt.png",
+      "answer": "Cristiano Ronaldo",
+      "answer_photo": "https://flagcdn.com/w320/pt.png",
+      "wrong_answers": [
+        "Pepe",
+        "João Cancelo",
+        "Bruno Fernandes",
+        "Bernardo Silva"
+      ]
+    },
+    {
+      "id": 9,
+      "category": "Venues",
+      "difficulty": 1,
+      "difficulty_label": "Easy",
+      "question": "How many host cities were used across the three 2026 World Cup countries?",
+      "photo_link": "https://flagcdn.com/w320/ca.png",
+      "answer": "16",
+      "answer_photo": null,
+      "wrong_answers": [
+        "12",
+        "20",
+        "10",
+        "14"
+      ]
+    },
+    {
+      "id": 10,
+      "category": "Teams",
+      "difficulty": 1,
+      "difficulty_label": "Easy",
+      "question": "Which country hosted the 2026 World Cup's opening match?",
+      "photo_link": "https://flagcdn.com/w320/mx.png",
+      "answer": "Mexico",
+      "answer_photo": "https://flagcdn.com/w320/mx.png",
+      "wrong_answers": [
+        "United States",
+        "Canada",
+        "Brazil",
+        "Qatar"
+      ]
+    },
+    {
+      "id": 11,
+      "category": "Game Details",
+      "difficulty": 1,
+      "difficulty_label": "Easy",
+      "question": "How many groups were the 48 teams divided into during the group stage?",
+      "photo_link": "https://flagcdn.com/w320/ca.png",
+      "answer": "12",
+      "answer_photo": null,
+      "wrong_answers": [
+        "8",
+        "10",
+        "16",
+        "6"
+      ]
+    },
+    {
+      "id": 12,
+      "category": "Players",
+      "difficulty": 1,
+      "difficulty_label": "Easy",
+      "question": "Which 19-year-old Spanish winger became one of the breakout stars of the 2026 World Cup?",
+      "photo_link": "https://flagcdn.com/w320/es.png",
+      "answer": "Lamine Yamal",
+      "answer_photo": "https://flagcdn.com/w320/es.png",
+      "wrong_answers": [
+        "Pedri",
+        "Nico Williams",
+        "Fermín López",
+        "Ferran Torres"
+      ]
+    },
+    {
+      "id": 13,
+      "category": "Teams",
+      "difficulty": 1,
+      "difficulty_label": "Easy",
+      "question": "Which host nation was co-hosting a World Cup for the very first time in its history?",
+      "photo_link": "https://flagcdn.com/w320/ca.png",
+      "answer": "Canada",
+      "answer_photo": "https://flagcdn.com/w320/ca.png",
+      "wrong_answers": [
+        "Mexico",
+        "United States",
+        "Brazil",
+        "Qatar"
+      ]
+    },
+    {
+      "id": 14,
+      "category": "Teams",
+      "difficulty": 1,
+      "difficulty_label": "Easy",
+      "question": "'Clutch' the Bald Eagle is the official mascot representing which host nation?",
+      "photo_link": "https://flagcdn.com/w320/us.png",
+      "answer": "United States",
+      "answer_photo": "https://flagcdn.com/w320/us.png",
+      "wrong_answers": [
+        "Canada",
+        "Mexico",
+        "Argentina",
+        "England"
+      ]
+    },
+    {
+      "id": 15,
+      "category": "Players",
+      "difficulty": 1,
+      "difficulty_label": "Easy",
+      "question": "Which Norwegian striker finished among the tournament's top scorers despite his team's quarterfinal exit?",
+      "photo_link": "https://flagcdn.com/w320/no.png",
+      "answer": "Erling Haaland",
+      "answer_photo": "https://flagcdn.com/w320/no.png",
+      "wrong_answers": [
+        "Alexander Sørloth",
+        "Martin Ødegaard",
+        "Ole Selnæs",
+        "Mohamed Elyounoussi"
+      ]
+    },
+    {
+      "id": 16,
+      "category": "Venues",
+      "difficulty": 1,
+      "difficulty_label": "Easy",
+      "question": "Estadio Azteca, the opening-match venue, is located in which city?",
+      "photo_link": "https://flagcdn.com/w320/mx.png",
+      "answer": "Mexico City",
+      "answer_photo": "https://flagcdn.com/w320/mx.png",
+      "wrong_answers": [
+        "Guadalajara",
+        "Monterrey",
+        "Toronto",
+        "Houston"
+      ]
+    },
+    {
+      "id": 17,
+      "category": "Teams",
+      "difficulty": 1,
+      "difficulty_label": "Easy",
+      "question": "'Maple' the Moose is the official mascot of which 2026 host nation?",
+      "photo_link": "https://flagcdn.com/w320/ca.png",
+      "answer": "Canada",
+      "answer_photo": "https://flagcdn.com/w320/ca.png",
+      "wrong_answers": [
+        "United States",
+        "Mexico",
+        "Sweden",
+        "Norway"
+      ]
+    },
+    {
+      "id": 18,
+      "category": "Game Details",
+      "difficulty": 1,
+      "difficulty_label": "Easy",
+      "question": "How many total matches were scheduled to be played at the 2026 World Cup?",
+      "photo_link": "https://flagcdn.com/w320/mx.png",
+      "answer": "104",
+      "answer_photo": null,
+      "wrong_answers": [
+        "64",
+        "80",
+        "90",
+        "96"
+      ]
+    },
+    {
+      "id": 19,
+      "category": "Players",
+      "difficulty": 1,
+      "difficulty_label": "Easy",
+      "question": "Which England midfielder scored two goals in the Round of 16 win over Mexico, then two more in the quarterfinal win over Norway?",
+      "photo_link": "https://flagcdn.com/w320/gb.png",
+      "answer": "Jude Bellingham",
+      "answer_photo": "https://flagcdn.com/w320/gb.png",
+      "wrong_answers": [
+        "Harry Kane",
+        "Phil Foden",
+        "Bukayo Saka",
+        "Anthony Gordon"
+      ]
+    },
+    {
+      "id": 20,
+      "category": "Teams",
+      "difficulty": 1,
+      "difficulty_label": "Easy",
+      "question": "Which two nations are contesting the 2026 World Cup final?",
+      "photo_link": "https://flagcdn.com/w320/ar.png",
+      "answer": "Argentina and Spain",
+      "answer_photo": "https://flagcdn.com/w320/es.png",
+      "wrong_answers": [
+        "Argentina and England",
+        "France and Spain",
+        "England and France",
+        "Argentina and France"
+      ]
+    },
+    {
+      "id": 21,
+      "category": "Teams",
+      "difficulty": 2,
+      "difficulty_label": "Medium",
+      "question": "Which four nations made their FIFA World Cup debut in 2026?",
+      "photo_link": "https://flagcdn.com/w320/cv.png",
+      "answer": "Cape Verde, Curaçao, Jordan and Uzbekistan",
+      "answer_photo": "https://flagcdn.com/w320/cw.png",
+      "wrong_answers": [
+        "Cape Verde, Panama, Jordan and Ghana",
+        "Curaçao, Haiti, Iraq and Jordan",
+        "Uzbekistan, Qatar, Jordan and Iran",
+        "Cape Verde, Curaçao, Tunisia and Jordan"
+      ]
+    },
+    {
+      "id": 22,
+      "category": "Players",
+      "difficulty": 2,
+      "difficulty_label": "Medium",
+      "question": "Entering the World Cup final, which two players were tied atop the Golden Boot standings with 8 goals each?",
+      "photo_link": "https://flagcdn.com/w320/fr.png",
+      "answer": "Lionel Messi and Kylian Mbappé",
+      "answer_photo": "https://flagcdn.com/w320/ar.png",
+      "wrong_answers": [
+        "Messi and Erling Haaland",
+        "Mbappé and Harry Kane",
+        "Haaland and Jude Bellingham",
+        "Messi and Ousmane Dembélé"
+      ]
+    },
+    {
+      "id": 23,
+      "category": "Venues",
+      "difficulty": 2,
+      "difficulty_label": "Medium",
+      "question": "Which stadium hosted the most matches of any 2026 World Cup venue, with nine games?",
+      "photo_link": "https://flagcdn.com/w320/us.png",
+      "answer": "AT&T Stadium (Dallas Stadium), Arlington",
+      "answer_photo": null,
+      "wrong_answers": [
+        "SoFi Stadium, Inglewood",
+        "MetLife Stadium, East Rutherford",
+        "Mercedes-Benz Stadium, Atlanta",
+        "Estadio Azteca, Mexico City"
+      ]
+    },
+    {
+      "id": 24,
+      "category": "Game Details",
+      "difficulty": 2,
+      "difficulty_label": "Medium",
+      "question": "What is the maximum squad size FIFA allowed each nation to register for the 2026 World Cup?",
+      "photo_link": "https://flagcdn.com/w320/mx.png",
+      "answer": "26 players",
+      "answer_photo": null,
+      "wrong_answers": [
+        "23 players",
+        "25 players",
+        "28 players",
+        "30 players"
+      ]
+    },
+    {
+      "id": 25,
+      "category": "Teams",
+      "difficulty": 2,
+      "difficulty_label": "Medium",
+      "question": "Which nation became the smallest country, by population, ever to qualify for a World Cup?",
+      "photo_link": "https://flagcdn.com/w320/cw.png",
+      "answer": "Curaçao",
+      "answer_photo": "https://flagcdn.com/w320/cw.png",
+      "wrong_answers": [
+        "Cape Verde",
+        "Iceland",
+        "Jordan",
+        "New Zealand"
+      ]
+    },
+    {
+      "id": 26,
+      "category": "Players",
+      "difficulty": 2,
+      "difficulty_label": "Medium",
+      "question": "Lionel Messi scored a hat-trick in the group stage against which team?",
+      "photo_link": "https://flagcdn.com/w320/ar.png",
+      "answer": "Algeria",
+      "answer_photo": "https://flagcdn.com/w320/dz.png",
+      "wrong_answers": [
+        "Austria",
+        "Jordan",
+        "Chile",
+        "Bolivia"
+      ]
+    },
+    {
+      "id": 27,
+      "category": "Venues",
+      "difficulty": 2,
+      "difficulty_label": "Medium",
+      "question": "During the 2026 World Cup, the historic Estadio Azteca competes under which official tournament name?",
+      "photo_link": "https://flagcdn.com/w320/mx.png",
+      "answer": "Mexico City Stadium",
+      "answer_photo": "https://flagcdn.com/w320/mx.png",
+      "wrong_answers": [
+        "Aztec Stadium International",
+        "Mexico Coliseum",
+        "Grand Azteca Arena",
+        "Estadio Nacional de México"
+      ]
+    },
+    {
+      "id": 28,
+      "category": "Game Details",
+      "difficulty": 2,
+      "difficulty_label": "Medium",
+      "question": "Under new 2026 rules, how long can a goalkeeper hold the ball before conceding a corner kick to the opposition?",
+      "photo_link": "https://flagcdn.com/w320/ca.png",
+      "answer": "8 seconds",
+      "answer_photo": null,
+      "wrong_answers": [
+        "6 seconds",
+        "10 seconds",
+        "5 seconds",
+        "12 seconds"
+      ]
+    },
+    {
+      "id": 29,
+      "category": "Teams",
+      "difficulty": 2,
+      "difficulty_label": "Medium",
+      "question": "Which team finished second in Group H by drawing all three of their group matches, eliminating two-time champions Uruguay in the process?",
+      "photo_link": "https://flagcdn.com/w320/cv.png",
+      "answer": "Cape Verde",
+      "answer_photo": "https://flagcdn.com/w320/cv.png",
+      "wrong_answers": [
+        "Saudi Arabia",
+        "Jordan",
+        "Curaçao",
+        "Panama"
+      ]
+    },
+    {
+      "id": 30,
+      "category": "Players",
+      "difficulty": 2,
+      "difficulty_label": "Medium",
+      "question": "Which Argentine forward scored a stunning long-range strike in extra time to break the deadlock against Switzerland in the quarterfinal?",
+      "photo_link": "https://flagcdn.com/w320/ar.png",
+      "answer": "Julián Álvarez",
+      "answer_photo": "https://flagcdn.com/w320/ar.png",
+      "wrong_answers": [
+        "Lautaro Martínez",
+        "Alexis Mac Allister",
+        "Enzo Fernández",
+        "Ángel Di María"
+      ]
+    },
+    {
+      "id": 31,
+      "category": "Venues",
+      "difficulty": 2,
+      "difficulty_label": "Medium",
+      "question": "Which 2026 World Cup venue was the only one not to host a single knockout-stage match?",
+      "photo_link": "https://flagcdn.com/w320/mx.png",
+      "answer": "Estadio Akron (Guadalajara)",
+      "answer_photo": "https://flagcdn.com/w320/mx.png",
+      "wrong_answers": [
+        "BC Place (Vancouver)",
+        "BMO Field (Toronto)",
+        "Estadio BBVA (Monterrey)",
+        "Lincoln Financial Field (Philadelphia)"
+      ]
+    },
+    {
+      "id": 32,
+      "category": "Game Details",
+      "difficulty": 2,
+      "difficulty_label": "Medium",
+      "question": "Besides the 24 group winners and runners-up, how many best third-placed teams advance to the new Round of 32?",
+      "photo_link": "https://flagcdn.com/w320/us.png",
+      "answer": "8",
+      "answer_photo": null,
+      "wrong_answers": [
+        "4",
+        "6",
+        "10",
+        "12"
+      ]
+    },
+    {
+      "id": 33,
+      "category": "Teams",
+      "difficulty": 2,
+      "difficulty_label": "Medium",
+      "question": "All three co-host nations were eliminated from the 2026 World Cup in the same round. Which round was it?",
+      "photo_link": "https://flagcdn.com/w320/us.png",
+      "answer": "Round of 16",
+      "answer_photo": null,
+      "wrong_answers": [
+        "Round of 32",
+        "Quarterfinals",
+        "Group stage",
+        "Semifinals"
+      ]
+    },
+    {
+      "id": 34,
+      "category": "Players",
+      "difficulty": 2,
+      "difficulty_label": "Medium",
+      "question": "Which goalkeeper's heroics almost carried World Cup debutants Cape Verde past defending champions Argentina in the Round of 32?",
+      "photo_link": "https://flagcdn.com/w320/cv.png",
+      "answer": "Vozinha",
+      "answer_photo": "https://flagcdn.com/w320/cv.png",
+      "wrong_answers": [
+        "Unai Simón",
+        "Emiliano Martínez",
+        "Jordan Pickford",
+        "Yassine Bounou"
+      ]
+    },
+    {
+      "id": 35,
+      "category": "Venues",
+      "difficulty": 2,
+      "difficulty_label": "Medium",
+      "question": "In which city did the 2026 World Cup's opening match take place?",
+      "photo_link": "https://flagcdn.com/w320/mx.png",
+      "answer": "Mexico City",
+      "answer_photo": "https://flagcdn.com/w320/mx.png",
+      "wrong_answers": [
+        "Los Angeles",
+        "Toronto",
+        "Guadalajara",
+        "Houston"
+      ]
+    },
+    {
+      "id": 36,
+      "category": "Game Details",
+      "difficulty": 2,
+      "difficulty_label": "Medium",
+      "question": "The 2026 World Cup set an all-time attendance record. Roughly how many total spectators attended?",
+      "photo_link": "https://flagcdn.com/w320/us.png",
+      "answer": "About 3.6 million",
+      "answer_photo": null,
+      "wrong_answers": [
+        "About 2.5 million",
+        "About 5 million",
+        "About 1.8 million",
+        "About 4.2 million"
+      ]
+    },
+    {
+      "id": 37,
+      "category": "Teams",
+      "difficulty": 2,
+      "difficulty_label": "Medium",
+      "question": "Curaçao's 2026 World Cup manager, who at 78 became the oldest coach ever at a World Cup, is which veteran Dutchman?",
+      "photo_link": "https://flagcdn.com/w320/cw.png",
+      "answer": "Dick Advocaat",
+      "answer_photo": "https://flagcdn.com/w320/nl.png",
+      "wrong_answers": [
+        "Guus Hiddink",
+        "Louis van Gaal",
+        "Frank de Boer",
+        "Ronald Koeman"
+      ]
+    },
+    {
+      "id": 38,
+      "category": "Players",
+      "difficulty": 2,
+      "difficulty_label": "Medium",
+      "question": "Which England captain overtook Gary Lineker to become his country's all-time leading World Cup goal scorer in 2026?",
+      "photo_link": "https://flagcdn.com/w320/gb.png",
+      "answer": "Harry Kane",
+      "answer_photo": "https://flagcdn.com/w320/gb.png",
+      "wrong_answers": [
+        "Jude Bellingham",
+        "Marcus Rashford",
+        "Ollie Watkins",
+        "Wayne Rooney"
+      ]
+    },
+    {
+      "id": 39,
+      "category": "Venues",
+      "difficulty": 2,
+      "difficulty_label": "Medium",
+      "question": "BC Place, a 2026 World Cup venue, is located in which Canadian city?",
+      "photo_link": "https://flagcdn.com/w320/ca.png",
+      "answer": "Vancouver",
+      "answer_photo": "https://flagcdn.com/w320/ca.png",
+      "wrong_answers": [
+        "Toronto",
+        "Ottawa",
+        "Montreal",
+        "Calgary"
+      ]
+    },
+    {
+      "id": 40,
+      "category": "Teams",
+      "difficulty": 2,
+      "difficulty_label": "Medium",
+      "question": "Which nation was the highest FIFA-ranked team to fail to qualify for the 2026 World Cup?",
+      "photo_link": "https://flagcdn.com/w320/it.png",
+      "answer": "Italy",
+      "answer_photo": "https://flagcdn.com/w320/it.png",
+      "wrong_answers": [
+        "Chile",
+        "Nigeria",
+        "Wales",
+        "Peru"
+      ]
+    },
+    {
+      "id": 41,
+      "category": "Teams",
+      "difficulty": 2,
+      "difficulty_label": "Medium",
+      "question": "Which nation eliminated co-host Canada from the 2026 World Cup in the Round of 16?",
+      "photo_link": "https://flagcdn.com/w320/ma.png",
+      "answer": "Morocco",
+      "answer_photo": "https://flagcdn.com/w320/ma.png",
+      "wrong_answers": [
+        "Belgium",
+        "Switzerland",
+        "Norway",
+        "Egypt"
+      ]
+    },
+    {
+      "id": 42,
+      "category": "Players",
+      "difficulty": 2,
+      "difficulty_label": "Medium",
+      "question": "Who provided the assist for both Argentine goals in their dramatic semifinal comeback win over England?",
+      "photo_link": "https://flagcdn.com/w320/ar.png",
+      "answer": "Lionel Messi",
+      "answer_photo": "https://flagcdn.com/w320/ar.png",
+      "wrong_answers": [
+        "Julián Álvarez",
+        "Enzo Fernández",
+        "Alexis Mac Allister",
+        "Ángel Di María"
+      ]
+    },
+    {
+      "id": 43,
+      "category": "Venues",
+      "difficulty": 2,
+      "difficulty_label": "Medium",
+      "question": "Which Atlanta stadium hosted the Argentina vs England semifinal on July 15, 2026?",
+      "photo_link": "https://flagcdn.com/w320/us.png",
+      "answer": "Mercedes-Benz Stadium",
+      "answer_photo": null,
+      "wrong_answers": [
+        "Truist Park",
+        "State Farm Arena",
+        "Bank of America Stadium",
+        "Georgia Dome"
+      ]
+    },
+    {
+      "id": 44,
+      "category": "Teams",
+      "difficulty": 2,
+      "difficulty_label": "Medium",
+      "question": "Which South American nation, two-time world champions, was eliminated in the group stage after debutants Cape Verde finished above them?",
+      "photo_link": "https://flagcdn.com/w320/uy.png",
+      "answer": "Uruguay",
+      "answer_photo": "https://flagcdn.com/w320/uy.png",
+      "wrong_answers": [
+        "Chile",
+        "Colombia",
+        "Ecuador",
+        "Paraguay"
+      ]
+    },
+    {
+      "id": 45,
+      "category": "Teams",
+      "difficulty": 2,
+      "difficulty_label": "Medium",
+      "question": "Which Scandinavian nation eliminated Brazil in the Round of 16, powered by a brace from Erling Haaland?",
+      "photo_link": "https://flagcdn.com/w320/no.png",
+      "answer": "Norway",
+      "answer_photo": "https://flagcdn.com/w320/no.png",
+      "wrong_answers": [
+        "Sweden",
+        "Denmark",
+        "Netherlands",
+        "Switzerland"
+      ]
+    },
+    {
+      "id": 46,
+      "category": "Players",
+      "difficulty": 3,
+      "difficulty_label": "Hard",
+      "question": "After the 2026 World Cup, Lionel Messi holds the all-time record for career World Cup goals. What is his new record tally?",
+      "photo_link": "https://flagcdn.com/w320/ar.png",
+      "answer": "21",
+      "answer_photo": "https://flagcdn.com/w320/ar.png",
+      "wrong_answers": [
+        "19",
+        "23",
+        "18",
+        "16"
+      ]
+    },
+    {
+      "id": 47,
+      "category": "Venues",
+      "difficulty": 3,
+      "difficulty_label": "Hard",
+      "question": "Kansas City's World Cup venue is officially called \"Kansas City Stadium\" for the tournament. What is its usual corporate name?",
+      "photo_link": "https://flagcdn.com/w320/us.png",
+      "answer": "Arrowhead Stadium (GEHA Field)",
+      "answer_photo": null,
+      "wrong_answers": [
+        "Truman Sports Complex",
+        "Liberty Memorial Stadium",
+        "Chiefs Stadium",
+        "Heart of America Field"
+      ]
+    },
+    {
+      "id": 48,
+      "category": "Game Details",
+      "difficulty": 3,
+      "difficulty_label": "Hard",
+      "question": "FIFA's upgraded semi-automated offside technology for 2026 sends an instant alert once a player is judged offside by more than how many centimetres?",
+      "photo_link": "https://flagcdn.com/w320/ca.png",
+      "answer": "10 centimetres",
+      "answer_photo": null,
+      "wrong_answers": [
+        "50 centimetres",
+        "5 centimetres",
+        "25 centimetres",
+        "2 centimetres"
+      ]
+    },
+    {
+      "id": 49,
+      "category": "Teams",
+      "difficulty": 3,
+      "difficulty_label": "Hard",
+      "question": "Cape Verde drew all three of their group games 0-0, 2-2 and 0-0. Which team held them to the 2-2 draw?",
+      "photo_link": "https://flagcdn.com/w320/cv.png",
+      "answer": "Uruguay",
+      "answer_photo": "https://flagcdn.com/w320/uy.png",
+      "wrong_answers": [
+        "Spain",
+        "Saudi Arabia",
+        "Colombia",
+        "Paraguay"
+      ]
+    },
+    {
+      "id": 50,
+      "category": "Players",
+      "difficulty": 3,
+      "difficulty_label": "Hard",
+      "question": "Who scored Spain's opening goal, a penalty, in their 2-0 semifinal win over France?",
+      "photo_link": "https://flagcdn.com/w320/es.png",
+      "answer": "Mikel Oyarzabal",
+      "answer_photo": "https://flagcdn.com/w320/es.png",
+      "wrong_answers": [
+        "Pedro Porro",
+        "Lamine Yamal",
+        "Pedri",
+        "Nico Williams"
+      ]
+    },
+    {
+      "id": 51,
+      "category": "Venues",
+      "difficulty": 3,
+      "difficulty_label": "Hard",
+      "question": "Cristiano Ronaldo's World Cup career ended in a Round of 16 defeat to Spain at which stadium?",
+      "photo_link": "https://flagcdn.com/w320/pt.png",
+      "answer": "AT&T Stadium (Dallas Stadium), Arlington",
+      "answer_photo": "https://flagcdn.com/w320/es.png",
+      "wrong_answers": [
+        "MetLife Stadium",
+        "Mercedes-Benz Stadium",
+        "SoFi Stadium",
+        "NRG Stadium"
+      ]
+    },
+    {
+      "id": 52,
+      "category": "Game Details",
+      "difficulty": 3,
+      "difficulty_label": "Hard",
+      "question": "Who is FIFA's head of refereeing, credited with overseeing the 2026 World Cup's new time-wasting crackdown?",
+      "photo_link": "https://flagcdn.com/w320/it.png",
+      "answer": "Pierluigi Collina",
+      "answer_photo": "https://flagcdn.com/w320/it.png",
+      "wrong_answers": [
+        "Pierluigi Pairetto",
+        "Roberto Rosetti",
+        "Massimo Busacca",
+        "Howard Webb"
+      ]
+    },
+    {
+      "id": 53,
+      "category": "Teams",
+      "difficulty": 3,
+      "difficulty_label": "Hard",
+      "question": "Which nation's qualification campaign, spanning 21 matches over 28 months, was the longest of the 2026 cycle?",
+      "photo_link": "https://flagcdn.com/w320/iq.png",
+      "answer": "Iraq",
+      "answer_photo": "https://flagcdn.com/w320/iq.png",
+      "wrong_answers": [
+        "Jordan",
+        "Uzbekistan",
+        "Curaçao",
+        "New Zealand"
+      ]
+    },
+    {
+      "id": 54,
+      "category": "Players",
+      "difficulty": 3,
+      "difficulty_label": "Hard",
+      "question": "Which Spanish goalkeeper extended his World Cup record to 609 minutes without conceding a goal, en route to the final?",
+      "photo_link": "https://flagcdn.com/w320/es.png",
+      "answer": "Unai Simón",
+      "answer_photo": "https://flagcdn.com/w320/es.png",
+      "wrong_answers": [
+        "David Raya",
+        "Jan Oblak",
+        "Thibaut Courtois",
+        "Marc-André ter Stegen"
+      ]
+    },
+    {
+      "id": 55,
+      "category": "Venues",
+      "difficulty": 3,
+      "difficulty_label": "Hard",
+      "question": "Which stadium hosted Canada's opening ceremony and match on June 12, 2026?",
+      "photo_link": "https://flagcdn.com/w320/ca.png",
+      "answer": "BMO Field, Toronto",
+      "answer_photo": "https://flagcdn.com/w320/ca.png",
+      "wrong_answers": [
+        "BC Place, Vancouver",
+        "Lumen Field, Seattle",
+        "Gillette Stadium, Foxborough",
+        "Levi's Stadium, Santa Clara"
+      ]
+    },
+    {
+      "id": 56,
+      "category": "Game Details",
+      "difficulty": 3,
+      "difficulty_label": "Hard",
+      "question": "Which referee took charge of the dramatic Argentina vs England semifinal?",
+      "photo_link": "https://flagcdn.com/w320/us.png",
+      "answer": "Ismail Elfath",
+      "answer_photo": null,
+      "wrong_answers": [
+        "Mark Geiger",
+        "Jair Marrufo",
+        "Armando Villarreal",
+        "Corey Parker"
+      ]
+    },
+    {
+      "id": 57,
+      "category": "Teams",
+      "difficulty": 3,
+      "difficulty_label": "Hard",
+      "question": "Portugal's Round of 16 exit against Spain was decided by a stoppage-time goal from which substitute?",
+      "photo_link": "https://flagcdn.com/w320/es.png",
+      "answer": "Mikel Merino",
+      "answer_photo": "https://flagcdn.com/w320/es.png",
+      "wrong_answers": [
+        "Dani Olmo",
+        "Fermín López",
+        "Álex Baena",
+        "Robin Le Normand"
+      ]
+    },
+    {
+      "id": 58,
+      "category": "Players",
+      "difficulty": 3,
+      "difficulty_label": "Hard",
+      "question": "Which 35-year-old forward captained World Cup debutants Cape Verde on their historic run to the Round of 32?",
+      "photo_link": "https://flagcdn.com/w320/cv.png",
+      "answer": "Ryan Mendes",
+      "answer_photo": "https://flagcdn.com/w320/cv.png",
+      "wrong_answers": [
+        "Roberto Lopes",
+        "Garry Rodrigues",
+        "Kevin Pina",
+        "Jamiro Monteiro"
+      ]
+    },
+    {
+      "id": 59,
+      "category": "Venues",
+      "difficulty": 3,
+      "difficulty_label": "Hard",
+      "question": "Which stadium is set to host both the closing ceremony and the final of the 2026 World Cup?",
+      "photo_link": "https://flagcdn.com/w320/us.png",
+      "answer": "MetLife Stadium (New York New Jersey Stadium)",
+      "answer_photo": null,
+      "wrong_answers": [
+        "AT&T Stadium",
+        "SoFi Stadium",
+        "Mercedes-Benz Stadium",
+        "Lincoln Financial Field"
+      ]
+    },
+    {
+      "id": 60,
+      "category": "Game Details",
+      "difficulty": 3,
+      "difficulty_label": "Hard",
+      "question": "Lionel Messi's early scoring burst in 2026 pushed him past whose long-standing record for career World Cup goals?",
+      "photo_link": "https://flagcdn.com/w320/ar.png",
+      "answer": "Miroslav Klose",
+      "answer_photo": null,
+      "wrong_answers": [
+        "Ronaldo (Brazil)",
+        "Gerd Müller",
+        "Pelé",
+        "Just Fontaine"
+      ]
+    },
+    {
+      "id": 61,
+      "category": "Players",
+      "difficulty": 3,
+      "difficulty_label": "Hard",
+      "question": "Cristiano Ronaldo became the first player in history to score in how many different World Cups?",
+      "photo_link": "https://flagcdn.com/w320/pt.png",
+      "answer": "Six",
+      "answer_photo": "https://flagcdn.com/w320/pt.png",
+      "wrong_answers": [
+        "Five",
+        "Four",
+        "Seven",
+        "Three"
+      ]
+    },
+    {
+      "id": 62,
+      "category": "Teams",
+      "difficulty": 3,
+      "difficulty_label": "Hard",
+      "question": "Iran set a World Cup record for the oldest starting XI (average age 32 years, 181 days) in a group-stage match against which opponent?",
+      "photo_link": "https://flagcdn.com/w320/ir.png",
+      "answer": "Belgium",
+      "answer_photo": "https://flagcdn.com/w320/be.png",
+      "wrong_answers": [
+        "New Zealand",
+        "Egypt",
+        "Iraq",
+        "Jordan"
+      ]
+    },
+    {
+      "id": 63,
+      "category": "Players",
+      "difficulty": 3,
+      "difficulty_label": "Hard",
+      "question": "Whose blistering first-half hat-trick propelled him up the Golden Boot standings during France's run to the semifinals?",
+      "photo_link": "https://flagcdn.com/w320/fr.png",
+      "answer": "Ousmane Dembélé",
+      "answer_photo": "https://flagcdn.com/w320/fr.png",
+      "wrong_answers": [
+        "Kylian Mbappé",
+        "Michael Olise",
+        "Randal Kolo Muani",
+        "Bradley Barcola"
+      ]
+    },
+    {
+      "id": 64,
+      "category": "Venues",
+      "difficulty": 3,
+      "difficulty_label": "Hard",
+      "question": "Julián Álvarez's extra-time golazo against Switzerland came in front of over 69,000 fans at which stadium?",
+      "photo_link": "https://flagcdn.com/w320/ar.png",
+      "answer": "Arrowhead Stadium, Kansas City",
+      "answer_photo": null,
+      "wrong_answers": [
+        "Lumen Field, Seattle",
+        "Levi's Stadium, Santa Clara",
+        "Hard Rock Stadium, Miami",
+        "Gillette Stadium, Foxborough"
+      ]
+    },
+    {
+      "id": 65,
+      "category": "Game Details",
+      "difficulty": 3,
+      "difficulty_label": "Hard",
+      "question": "Roughly how many players in total were digitally body-scanned to build 3D avatars for the 2026 World Cup's offside technology?",
+      "photo_link": "https://flagcdn.com/w320/mx.png",
+      "answer": "1,248",
+      "answer_photo": null,
+      "wrong_answers": [
+        "1,152",
+        "1,024",
+        "1,440",
+        "896"
+      ]
+    },
+    {
+      "id": 66,
+      "category": "Teams",
+      "difficulty": 3,
+      "difficulty_label": "Hard",
+      "question": "Which team's manager, Hong Myung-bo, resigned after a group-stage exit that echoed his own side's failure at the 2014 World Cup?",
+      "photo_link": "https://flagcdn.com/w320/kr.png",
+      "answer": "South Korea",
+      "answer_photo": "https://flagcdn.com/w320/kr.png",
+      "wrong_answers": [
+        "Japan",
+        "Qatar",
+        "Saudi Arabia",
+        "Iran"
+      ]
+    },
+    {
+      "id": 67,
+      "category": "Players",
+      "difficulty": 3,
+      "difficulty_label": "Hard",
+      "question": "Which Swiss forward was sent off with a second yellow card for simulation, confirmed by VAR, during Argentina's quarterfinal win?",
+      "photo_link": "https://flagcdn.com/w320/ch.png",
+      "answer": "Breel Embolo",
+      "answer_photo": "https://flagcdn.com/w320/ch.png",
+      "wrong_answers": [
+        "Dan Ndoye",
+        "Remo Freuler",
+        "Granit Xhaka",
+        "Manuel Akanji"
+      ]
+    },
+    {
+      "id": 68,
+      "category": "Venues",
+      "difficulty": 3,
+      "difficulty_label": "Hard",
+      "question": "A special ceremony marking the FIFA World Cup's 1,000th all-time match was held on June 20, 2026, in which Mexican city?",
+      "photo_link": "https://flagcdn.com/w320/mx.png",
+      "answer": "Monterrey",
+      "answer_photo": "https://flagcdn.com/w320/mx.png",
+      "wrong_answers": [
+        "Guadalajara",
+        "Mexico City",
+        "Puebla",
+        "Tijuana"
+      ]
+    },
+    {
+      "id": 69,
+      "category": "Game Details",
+      "difficulty": 3,
+      "difficulty_label": "Hard",
+      "question": "How many kilograms does the solid-gold FIFA World Cup Trophy weigh?",
+      "photo_link": "https://flagcdn.com/w320/ar.png",
+      "answer": "6.175 kg",
+      "answer_photo": null,
+      "wrong_answers": [
+        "4.6 kg",
+        "8.2 kg",
+        "3.8 kg",
+        "10 kg"
+      ]
+    },
+    {
+      "id": 70,
+      "category": "Teams",
+      "difficulty": 3,
+      "difficulty_label": "Hard",
+      "question": "New Zealand qualified for the 2026 World Cup as the lowest-ranked team in the field. What was their FIFA ranking at the time?",
+      "photo_link": "https://flagcdn.com/w320/nz.png",
+      "answer": "85th",
+      "answer_photo": "https://flagcdn.com/w320/nz.png",
+      "wrong_answers": [
+        "65th",
+        "102nd",
+        "73rd",
+        "94th"
+      ]
+    },
+    {
+      "id": 71,
+      "category": "Players",
+      "difficulty": 4,
+      "difficulty_label": "Very Hard",
+      "question": "Which pop star performed \"Lights\" on the pitch to celebrate England's extra-time quarterfinal win over Norway?",
+      "photo_link": "https://flagcdn.com/w320/gb.png",
+      "answer": "Ellie Goulding",
+      "answer_photo": null,
+      "wrong_answers": [
+        "Dua Lipa",
+        "Adele",
+        "Rita Ora",
+        "Jess Glynne"
+      ]
+    },
+    {
+      "id": 72,
+      "category": "Venues",
+      "difficulty": 4,
+      "difficulty_label": "Very Hard",
+      "question": "Estadio Azteca's current everyday corporate sponsorship name, set aside for neutral World Cup branding, is which of the following?",
+      "photo_link": "https://flagcdn.com/w320/mx.png",
+      "answer": "Estadio Banorte",
+      "answer_photo": "https://flagcdn.com/w320/mx.png",
+      "wrong_answers": [
+        "Estadio Telmex",
+        "Estadio Corona",
+        "Estadio Movistar",
+        "Estadio Santander"
+      ]
+    },
+    {
+      "id": 73,
+      "category": "Game Details",
+      "difficulty": 4,
+      "difficulty_label": "Very Hard",
+      "question": "Which artist is curating and headlining the first-ever FIFA World Cup Final halftime show in 2026?",
+      "photo_link": "https://flagcdn.com/w320/us.png",
+      "answer": "Coldplay (Chris Martin)",
+      "answer_photo": null,
+      "wrong_answers": [
+        "Justin Bieber",
+        "Shakira",
+        "Madonna",
+        "BTS"
+      ]
+    },
+    {
+      "id": 74,
+      "category": "Players",
+      "difficulty": 4,
+      "difficulty_label": "Very Hard",
+      "question": "A resurfaced 2007 charity-calendar photo shows Lionel Messi bathing which future World Cup finalist as a baby?",
+      "photo_link": "https://flagcdn.com/w320/es.png",
+      "answer": "Lamine Yamal",
+      "answer_photo": "https://flagcdn.com/w320/es.png",
+      "wrong_answers": [
+        "Pedri",
+        "Nico Williams",
+        "Gavi",
+        "Fermín López"
+      ]
+    },
+    {
+      "id": 75,
+      "category": "Teams",
+      "difficulty": 4,
+      "difficulty_label": "Very Hard",
+      "question": "Which debutant nation's government gave everyone the day off work to watch their decisive World Cup qualifying match?",
+      "photo_link": "https://flagcdn.com/w320/cw.png",
+      "answer": "Curaçao",
+      "answer_photo": "https://flagcdn.com/w320/cw.png",
+      "wrong_answers": [
+        "Cape Verde",
+        "Jordan",
+        "Uzbekistan",
+        "Panama"
+      ]
+    },
+    {
+      "id": 76,
+      "category": "Game Details",
+      "difficulty": 4,
+      "difficulty_label": "Very Hard",
+      "question": "Post Malone, who headlines the 2026 closing ceremony, spent much of his childhood in which Texas city?",
+      "photo_link": "https://flagcdn.com/w320/us.png",
+      "answer": "Grapevine",
+      "answer_photo": null,
+      "wrong_answers": [
+        "Arlington",
+        "Frisco",
+        "Waco",
+        "McKinney"
+      ]
+    },
+    {
+      "id": 77,
+      "category": "Teams",
+      "difficulty": 4,
+      "difficulty_label": "Very Hard",
+      "question": "Which nation qualified for the 2026 World Cup for the first time since finishing third at the 2002 tournament?",
+      "photo_link": "https://flagcdn.com/w320/tr.png",
+      "answer": "Turkey (Türkiye)",
+      "answer_photo": "https://flagcdn.com/w320/tr.png",
+      "wrong_answers": [
+        "South Korea",
+        "Belgium",
+        "Croatia",
+        "Portugal"
+      ]
+    },
+    {
+      "id": 78,
+      "category": "Players",
+      "difficulty": 4,
+      "difficulty_label": "Very Hard",
+      "question": "Cape Verde's 35-year-old captain, Ryan Mendes, played his club football for which Turkish second-tier side during the 2026 World Cup?",
+      "photo_link": "https://flagcdn.com/w320/cv.png",
+      "answer": "Iğdır",
+      "answer_photo": null,
+      "wrong_answers": [
+        "Konyaspor",
+        "Rizespor",
+        "Boluspor",
+        "Adanaspor"
+      ]
+    },
+    {
+      "id": 79,
+      "category": "Venues",
+      "difficulty": 4,
+      "difficulty_label": "Very Hard",
+      "question": "Which Los Angeles-area stadium hosted Spain's quarterfinal win over Belgium, where Lamine Yamal won Player of the Match?",
+      "photo_link": "https://flagcdn.com/w320/es.png",
+      "answer": "SoFi Stadium, Inglewood",
+      "answer_photo": null,
+      "wrong_answers": [
+        "Rose Bowl, Pasadena",
+        "Los Angeles Memorial Coliseum",
+        "Dignity Health Sports Park",
+        "Angel Stadium"
+      ]
+    },
+    {
+      "id": 80,
+      "category": "Teams",
+      "difficulty": 4,
+      "difficulty_label": "Very Hard",
+      "question": "Which nation returned to the World Cup in 2026 after last appearing in 1998, alongside Austria and Scotland?",
+      "photo_link": "https://flagcdn.com/w320/no.png",
+      "answer": "Norway",
+      "answer_photo": "https://flagcdn.com/w320/no.png",
+      "wrong_answers": [
+        "Sweden",
+        "Denmark",
+        "Finland",
+        "Iceland"
+      ]
+    },
+    {
+      "id": 81,
+      "category": "Players",
+      "difficulty": 4,
+      "difficulty_label": "Very Hard",
+      "question": "Whose 55th-minute goal, assisted by Morgan Rogers, briefly put England ahead in the World Cup semifinal against Argentina?",
+      "photo_link": "https://flagcdn.com/w320/gb.png",
+      "answer": "Anthony Gordon",
+      "answer_photo": "https://flagcdn.com/w320/gb.png",
+      "wrong_answers": [
+        "Marcus Rashford",
+        "Bukayo Saka",
+        "Cole Palmer",
+        "Phil Foden"
+      ]
+    },
+    {
+      "id": 82,
+      "category": "Venues",
+      "difficulty": 4,
+      "difficulty_label": "Very Hard",
+      "question": "Which stadium hosted the France vs Spain semifinal on July 14, 2026?",
+      "photo_link": "https://flagcdn.com/w320/es.png",
+      "answer": "AT&T Stadium (Dallas Stadium), Arlington",
+      "answer_photo": null,
+      "wrong_answers": [
+        "NRG Stadium, Houston",
+        "Mercedes-Benz Stadium, Atlanta",
+        "Lumen Field, Seattle",
+        "Levi's Stadium, Santa Clara"
+      ]
+    },
+    {
+      "id": 83,
+      "category": "Game Details",
+      "difficulty": 4,
+      "difficulty_label": "Very Hard",
+      "question": "Under a new 2026 rule, players who leave the field to confrontationally protest a referee's decision receive which sanction?",
+      "photo_link": "https://flagcdn.com/w320/ca.png",
+      "answer": "A red card",
+      "answer_photo": null,
+      "wrong_answers": [
+        "A yellow card",
+        "A one-match ban only",
+        "No sanction, just a warning",
+        "A blue card"
+      ]
+    },
+    {
+      "id": 84,
+      "category": "Teams",
+      "difficulty": 4,
+      "difficulty_label": "Very Hard",
+      "question": "Sweden reached the Round of 32 as a third-place wildcard, facing France in which host city?",
+      "photo_link": "https://flagcdn.com/w320/se.png",
+      "answer": "East Rutherford, New Jersey",
+      "answer_photo": "https://flagcdn.com/w320/fr.png",
+      "wrong_answers": [
+        "Foxborough, Massachusetts",
+        "Philadelphia, Pennsylvania",
+        "Miami Gardens, Florida",
+        "Santa Clara, California"
+      ]
+    },
+    {
+      "id": 85,
+      "category": "Teams",
+      "difficulty": 4,
+      "difficulty_label": "Very Hard",
+      "question": "Which nation returned to the World Cup in 2026 after appearing in their only previous tournament back in 1974, alongside Haiti?",
+      "photo_link": "https://flagcdn.com/w320/cd.png",
+      "answer": "DR Congo",
+      "answer_photo": "https://flagcdn.com/w320/cd.png",
+      "wrong_answers": [
+        "Senegal",
+        "Cameroon",
+        "Tunisia",
+        "Ghana"
+      ]
+    },
+    {
+      "id": 86,
+      "category": "Players",
+      "difficulty": 4,
+      "difficulty_label": "Very Hard",
+      "question": "Which Real Sociedad forward scored twice in Spain's 4-0 group-stage win over Saudi Arabia, then twice more in the Round of 32 win over Austria?",
+      "photo_link": "https://flagcdn.com/w320/es.png",
+      "answer": "Mikel Oyarzabal",
+      "answer_photo": "https://flagcdn.com/w320/es.png",
+      "wrong_answers": [
+        "Ander Barrenetxea",
+        "Take Kubo",
+        "Jon Guridi",
+        "Martín Zubimendi"
+      ]
+    },
+    {
+      "id": 87,
+      "category": "Venues",
+      "difficulty": 4,
+      "difficulty_label": "Very Hard",
+      "question": "Which host city's stadium is Guinness-certified as the loudest outdoor sports venue on the planet?",
+      "photo_link": "https://flagcdn.com/w320/us.png",
+      "answer": "Kansas City (Arrowhead Stadium)",
+      "answer_photo": null,
+      "wrong_answers": [
+        "Seattle (Lumen Field)",
+        "Atlanta (Mercedes-Benz Stadium)",
+        "Dallas (AT&T Stadium)",
+        "Miami (Hard Rock Stadium)"
+      ]
+    },
+    {
+      "id": 88,
+      "category": "Game Details",
+      "difficulty": 4,
+      "difficulty_label": "Very Hard",
+      "question": "Iraq's marathon 2026 qualifying campaign lasted a record 21 matches. Over how many months did it span?",
+      "photo_link": "https://flagcdn.com/w320/iq.png",
+      "answer": "28 months",
+      "answer_photo": null,
+      "wrong_answers": [
+        "18 months",
+        "36 months",
+        "24 months",
+        "32 months"
+      ]
+    },
+    {
+      "id": 89,
+      "category": "Teams",
+      "difficulty": 4,
+      "difficulty_label": "Very Hard",
+      "question": "Which nation, appearing at only its second-ever World Cup, returned in 2026 after a debut back in 1986?",
+      "photo_link": "https://flagcdn.com/w320/iq.png",
+      "answer": "Iraq",
+      "answer_photo": "https://flagcdn.com/w320/iq.png",
+      "wrong_answers": [
+        "Jordan",
+        "Uzbekistan",
+        "Curaçao",
+        "Panama"
+      ]
+    },
+    {
+      "id": 90,
+      "category": "Players",
+      "difficulty": 4,
+      "difficulty_label": "Very Hard",
+      "question": "Whose long-range strike in the 85th minute leveled the score against England before Lautaro Martínez's winner sent Argentina through?",
+      "photo_link": "https://flagcdn.com/w320/ar.png",
+      "answer": "Enzo Fernández",
+      "answer_photo": "https://flagcdn.com/w320/ar.png",
+      "wrong_answers": [
+        "Rodrigo De Paul",
+        "Leandro Paredes",
+        "Alexis Mac Allister",
+        "Giovani Lo Celso"
+      ]
+    },
+    {
+      "id": 91,
+      "category": "Venues",
+      "difficulty": 4,
+      "difficulty_label": "Very Hard",
+      "question": "AT&T Stadium's (Dallas Stadium's) official World Cup capacity of roughly 93,000 is which of these figures?",
+      "photo_link": "https://flagcdn.com/w320/us.png",
+      "answer": "About 93,000",
+      "answer_photo": null,
+      "wrong_answers": [
+        "About 82,500",
+        "About 105,000",
+        "About 76,000",
+        "About 68,000"
+      ]
+    },
+    {
+      "id": 92,
+      "category": "Game Details",
+      "difficulty": 4,
+      "difficulty_label": "Very Hard",
+      "question": "What is the new time limit for a substituted player to leave the pitch once the substitution board is shown, under 2026 rules?",
+      "photo_link": "https://flagcdn.com/w320/ca.png",
+      "answer": "10 seconds",
+      "answer_photo": null,
+      "wrong_answers": [
+        "5 seconds",
+        "15 seconds",
+        "20 seconds",
+        "30 seconds"
+      ]
+    },
+    {
+      "id": 93,
+      "category": "Players",
+      "difficulty": 5,
+      "difficulty_label": "Expert",
+      "question": "Lionel Messi missed penalties against two different opponents during the 2026 group and knockout stages. Name both.",
+      "photo_link": "https://flagcdn.com/w320/ar.png",
+      "answer": "Austria and Egypt",
+      "answer_photo": null,
+      "wrong_answers": [
+        "Austria and Switzerland",
+        "Egypt and England",
+        "Jordan and Algeria",
+        "Switzerland and England"
+      ]
+    },
+    {
+      "id": 94,
+      "category": "Venues",
+      "difficulty": 5,
+      "difficulty_label": "Expert",
+      "question": "Mexico's win over South Africa in the 2026 opener finally ended a long personal drought. How many previous World Cup openers had Mexico lost before 2026?",
+      "photo_link": "https://flagcdn.com/w320/mx.png",
+      "answer": "Three (1930, 1950, 1954)",
+      "answer_photo": "https://flagcdn.com/w320/mx.png",
+      "wrong_answers": [
+        "Two (1950, 1970)",
+        "Four (1930, 1950, 1954, 1970)",
+        "One (1970)",
+        "None — they had never lost an opener before"
+      ]
+    },
+    {
+      "id": 95,
+      "category": "Teams",
+      "difficulty": 5,
+      "difficulty_label": "Expert",
+      "question": "South Korea's Hong Myung-bo suffered a group-stage exit in 2026 that echoed an earlier failure. In which prior World Cup did that first happen?",
+      "photo_link": "https://flagcdn.com/w320/kr.png",
+      "answer": "2014",
+      "answer_photo": "https://flagcdn.com/w320/kr.png",
+      "wrong_answers": [
+        "2010",
+        "2018",
+        "2022",
+        "2006"
+      ]
+    },
+    {
+      "id": 96,
+      "category": "Players",
+      "difficulty": 5,
+      "difficulty_label": "Expert",
+      "question": "Which Argentine goalkeeper combined with Lisandro Martínez to deny Breel Embolo a clear shot in the quarterfinal, before starting the semifinal shutout of England's first half?",
+      "photo_link": "https://flagcdn.com/w320/ar.png",
+      "answer": "Emiliano Martínez",
+      "answer_photo": "https://flagcdn.com/w320/ar.png",
+      "wrong_answers": [
+        "Franco Armani",
+        "Gerónimo Rulli",
+        "Walter Benítez",
+        "Juan Musso"
+      ]
+    },
+    {
+      "id": 97,
+      "category": "Venues",
+      "difficulty": 5,
+      "difficulty_label": "Expert",
+      "question": "Which 2026 World Cup venue had also hosted a men's World Cup final, back in 1986?",
+      "photo_link": "https://flagcdn.com/w320/mx.png",
+      "answer": "Estadio Azteca (Mexico City Stadium)",
+      "answer_photo": "https://flagcdn.com/w320/mx.png",
+      "wrong_answers": [
+        "Rose Bowl, Pasadena",
+        "Levi's Stadium, Santa Clara",
+        "MetLife Stadium, East Rutherford",
+        "AT&T Stadium, Arlington"
+      ]
+    },
+    {
+      "id": 98,
+      "category": "Game Details",
+      "difficulty": 5,
+      "difficulty_label": "Expert",
+      "question": "The current FIFA World Cup Trophy, awarded since 1974, is made of which materials?",
+      "photo_link": "https://flagcdn.com/w320/ar.png",
+      "answer": "18-karat gold with a malachite base",
+      "answer_photo": null,
+      "wrong_answers": [
+        "Gold-plated sterling silver with a lapis lazuli base",
+        "Solid platinum with a marble base",
+        "24-karat gold with an obsidian base",
+        "Bronze with a jade inlay"
+      ]
+    },
+    {
+      "id": 99,
+      "category": "Teams",
+      "difficulty": 5,
+      "difficulty_label": "Expert",
+      "question": "Curaçao became the first team representing a non-sovereign nation to reach a World Cup since which team's 1938 appearance?",
+      "photo_link": "https://flagcdn.com/w320/cw.png",
+      "answer": "Dutch East Indies",
+      "answer_photo": null,
+      "wrong_answers": [
+        "Hong Kong",
+        "Puerto Rico",
+        "Faroe Islands",
+        "Gibraltar"
+      ]
+    },
+    {
+      "id": 100,
+      "category": "Players",
+      "difficulty": 5,
+      "difficulty_label": "Expert",
+      "question": "Whose World Cup career, spanning six tournaments from 2006 to 2026, ended with 27 appearances — the second-most all time, behind only Messi?",
+      "photo_link": "https://flagcdn.com/w320/pt.png",
+      "answer": "Cristiano Ronaldo",
+      "answer_photo": "https://flagcdn.com/w320/pt.png",
+      "wrong_answers": [
+        "Rafael Márquez",
+        "Miroslav Klose",
+        "Lothar Matthäus",
+        "Gianluigi Buffon"
+      ]
+    },
+    {
+      "id": 101,
+      "category": "Game Details",
+      "difficulty": 5,
+      "difficulty_label": "Expert",
+      "question": "Approximately how many goals were scored across the entire 2026 World Cup qualification process (899 matches)?",
+      "photo_link": "https://flagcdn.com/w320/mx.png",
+      "answer": "2,527",
+      "answer_photo": null,
+      "wrong_answers": [
+        "1,984",
+        "3,102",
+        "2,150",
+        "2,890"
+      ]
+    },
+    {
+      "id": 102,
+      "category": "Teams",
+      "difficulty": 5,
+      "difficulty_label": "Expert",
+      "question": "Sweden became the first European nation to qualify for a World Cup by reaching the play-offs solely through which competition?",
+      "photo_link": "https://flagcdn.com/w320/se.png",
+      "answer": "The UEFA Nations League",
+      "answer_photo": null,
+      "wrong_answers": [
+        "The UEFA European Championship",
+        "A special European play-in tournament",
+        "UEFA Under-21 rankings",
+        "A coefficient-based bye"
+      ]
+    },
+    {
+      "id": 103,
+      "category": "Players",
+      "difficulty": 5,
+      "difficulty_label": "Expert",
+      "question": "Which two players are the only ones younger than Lamine Yamal to have played in a men's World Cup final?",
+      "photo_link": "https://flagcdn.com/w320/es.png",
+      "answer": "Pelé and Giuseppe Bergomi",
+      "answer_photo": null,
+      "wrong_answers": [
+        "Pelé and Kylian Mbappé",
+        "Diego Maradona and Pelé",
+        "Giuseppe Bergomi and Franz Beckenbauer",
+        "Kylian Mbappé and Zinedine Zidane"
+      ]
+    },
+    {
+      "id": 104,
+      "category": "Venues",
+      "difficulty": 5,
+      "difficulty_label": "Expert",
+      "question": "AT&T Stadium's neutral World Cup branding calls it \"Dallas Stadium,\" despite the venue actually sitting in which Texas city?",
+      "photo_link": "https://flagcdn.com/w320/us.png",
+      "answer": "Arlington",
+      "answer_photo": null,
+      "wrong_answers": [
+        "Fort Worth",
+        "Frisco",
+        "Irving",
+        "Plano"
+      ]
+    },
+    {
+      "id": 105,
+      "category": "Game Details",
+      "difficulty": 5,
+      "difficulty_label": "Expert",
+      "question": "What was the average number of goals per match recorded across the entire 2026 World Cup qualification process?",
+      "photo_link": "https://flagcdn.com/w320/mx.png",
+      "answer": "2.81",
+      "answer_photo": null,
+      "wrong_answers": [
+        "2.14",
+        "3.25",
+        "1.98",
+        "2.50"
+      ]
+    }
+  ]
+}

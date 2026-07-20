@@ -90,48 +90,8 @@ complete example):
 
 `network.peer_config` accepts PeerJS options (`host`, `port`, `path`, `secure`, `key`,
 `config.iceServers`) to use a self-hosted [PeerServer](https://github.com/peers/peerjs-server)
-or your own TURN relay — see the connectivity section below.
-
-## Multiplayer connectivity & debugging
-
-Players connect straight to the host's browser tab over WebRTC. When a player is on a
-different network than the host — typically a phone on cellular data — the connection may
-need a TURN relay: carrier-grade NAT often can't be traversed with STUN alone. **There are
-no free public TURN servers left** (the relays PeerJS ships as defaults have dead DNS, and
-Open Relay rejects every port — verified July 2026), so by default the game uses live public
-STUN servers only, which covers the friendlier NAT combinations.
-
-The network lifecycle is always recorded: on a phone, if joining drags on or fails, a
-**"🔍 Show connection log"** button appears under the status message — tap it to see the
-whole history (broker registration, ICE candidates `host`/`srflx`/`relay`, state changes,
-per-server errors, and which candidate pair connected). You can also pre-enable the panel
-with `?debug=1` in the URL before hosting; the lobby QR/join link carries the flag to the
-players. `ice state: failed` after only `host`/`srflx` candidates means this network pair
-requires TURN. Silent stalls (a broker or negotiation that never answers) time out after
-15 s and retry instead of hanging on "Connecting…".
-
-To add TURN, get free-tier credentials (e.g. [metered.ca](https://www.metered.ca/stun-turn)
-or [expressturn.com](https://www.expressturn.com), or self-hosted
-[coturn](https://github.com/coturn/coturn)) and copy
-[data/turn.example.json](data/turn.example.json) to `data/turn.local.json`, filling in your
-values. That file is **git-ignored** — credentials never get committed — and is loaded
-automatically at startup; its servers are appended to whatever ICE set is in effect.
-The host can also load the same JSON on the fly via **"🔑 Upload TURN credentials"** on the
-Host-a-game screen (handy on a deployed site, where the git-ignored file isn't published;
-the credentials stay in the browser session). A question pack can also still ship its own
-relay via `game_defaults.network.peer_config.config.iceServers` (same RTCIceServer shape),
-which is used as-is.
-
-Without any TURN relay the game still works for same-network players, and the host UI says
-so: the setup screen shows a warning that phones on cellular data won't reach the game, and
-the lobby starts with the QR code hidden (a Show/Hide QR button toggles it — same-network
-phones can still scan it).
-
-Configuring the **host alone is enough** for most cases: a relay candidate on either side is
-publicly reachable by the other. Note for deployments: `data/turn.local.json` is not checked
-in, so a plain GitHub Pages deploy won't include it — add it to the deployed site out of
-band (e.g. write it from a repository secret during the deploy workflow) or host with a pack
-that carries its own credentials.
+or a TURN server — useful behind strict corporate NATs, where the default STUN-only setup
+may not connect.
 
 ## Development
 

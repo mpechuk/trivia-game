@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { DEFAULT_GAME, DEFAULT_THEME, loadConfig, loadPackManifest, loadTurnConfig, normalizeConfig, parseTurnConfig } from '../../js/config.js';
+import { DEFAULT_GAME, DEFAULT_THEME, loadConfig, loadPackManifest, loadTurnConfig, normalizeConfig } from '../../js/config.js';
 
 const QUESTION = {
   id: 1, category: 'X', difficulty: 1, question: 'q?', answer: 'A', wrong_answers: ['B', 'C', 'D', 'E'],
@@ -77,16 +77,6 @@ test('loadPackManifest returns the packs array', async () => {
 test('loadPackManifest returns [] on failure', async () => {
   stubFetch({}, false);
   assert.deepEqual(await loadPackManifest('missing.json'), []);
-});
-
-test('parseTurnConfig normalizes both shapes and drops junk entries', () => {
-  const server = { urls: 'turn:r.example:3478', username: 'u', credential: 'c' };
-  assert.deepEqual(parseTurnConfig({ iceServers: [server] }), [server]);
-  assert.deepEqual(parseTurnConfig([server]), [server]);
-  assert.deepEqual(parseTurnConfig({ iceServers: [server, { no_urls: 1 }, null] }), [server]);
-  assert.deepEqual(parseTurnConfig({ iceServers: 'nope' }), []);
-  assert.deepEqual(parseTurnConfig('nope'), []);
-  assert.deepEqual(parseTurnConfig(null), []);
 });
 
 test('loadTurnConfig accepts both {iceServers: [...]} and a bare array', async () => {

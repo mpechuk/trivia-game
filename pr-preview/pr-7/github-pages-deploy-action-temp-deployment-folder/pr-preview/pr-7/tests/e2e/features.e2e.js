@@ -69,31 +69,6 @@ export async function run(errors) {
       throw new Error('QR should be visible by default when TURN is configured');
     }
     console.log('TURN UI OK — warning + hidden QR without a relay, toggle works, quiet with one');
-
-    // Uploading a credentials file on the setup screen clears the warning
-    // and restores the QR-visible default in the lobby.
-    const uploader = await ctx.newPage();
-    watch(uploader, 'turn-upload', errors);
-    await uploader.goto(BASE);
-    await uploader.getByRole('button', { name: /Host multiplayer/ }).click();
-    await uploader.locator('.turn-warning', { hasText: /cellular/ }).waitFor({ timeout: 10000 });
-    await uploader.locator('input[type="file"]').setInputFiles({
-      name: 'turn.json',
-      mimeType: 'application/json',
-      buffer: Buffer.from(JSON.stringify({
-        iceServers: [{ urls: 'turn:turn.invalid:3478', username: 't', credential: 't' }],
-      })),
-    });
-    await uploader.locator('.turn-ok').waitFor({ timeout: 5000 });
-    if (await uploader.locator('.turn-warning').count()) {
-      throw new Error('warning still shown after uploading TURN credentials');
-    }
-    await uploader.getByRole('button', { name: /Create room/ }).click();
-    await uploader.locator('.lobby-code').waitFor({ timeout: 20000 });
-    if (!(await uploader.locator('.lobby-qr').isVisible())) {
-      throw new Error('QR should be visible after uploading TURN credentials');
-    }
-    console.log('TURN UPLOAD OK — uploaded credentials clear the warning and re-enable the QR');
     await ctx.close();
   }
 

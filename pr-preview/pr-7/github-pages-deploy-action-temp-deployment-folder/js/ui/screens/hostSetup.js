@@ -1,9 +1,7 @@
 // Game setup screen, used for both "Host multiplayer" and "Play solo".
 // All controls default to the config's game_defaults block.
 import { avatarPicker, randomName } from '../../avatars.js';
-import { parseTurnConfig } from '../../config.js';
 import { createRoom } from '../../net/host.js';
-import { buildPeerOptions, hasTurnServer, withExtraIceServers } from '../../net/ice.js';
 import { loadProfile, saveProfile } from '../../net/player.js';
 import { MIX_PRESETS, buildPlan, categoriesOf, difficultyTargets, filterPool, DIFFICULTY_LABELS } from '../../questions.js';
 import { clamp, el } from '../../util.js';
@@ -150,63 +148,6 @@ export function hostSetupScreen(solo) {
       const startBtn = el('button', { class: 'btn btn-primary btn-big', type: 'button', onclick: start },
         solo ? '▶ Start solo game' : '📺 Create room');
 
-      // Pack peer_config + TURN credentials (data/turn.local.json, or a JSON
-      // file uploaded right here — useful on deployed sites, where the
-      // git-ignored file isn't published). Without a relay, players behind
-      // carrier-grade NAT (phones on cellular) cannot reach the host — warn
-      // up front and offer the upload rather than fail mysteriously.
-      const effectivePeerConfig = () =>
-        withExtraIceServers(gameDefaults.network?.peer_config, ctx.turnServers);
-      const turnReady = () =>
-        hasTurnServer(buildPeerOptions(effectivePeerConfig()).config.iceServers);
-
-      let turnBox = null;
-      if (!solo) {
-        const turnStatus = el('p', {});
-        const turnError = el('p', { class: 'turn-error', role: 'status' });
-        const turnFile = el('input', {
-          type: 'file',
-          accept: '.json,application/json',
-          class: 'visually-hidden',
-          onchange: async () => {
-            const file = turnFile.files && turnFile.files[0];
-            turnFile.value = ''; // allow re-picking the same file
-            if (!file) return;
-            try {
-              const servers = parseTurnConfig(JSON.parse(await file.text()));
-              if (!hasTurnServer(servers)) {
-                throw new Error('no "turn:…" server entries found — see data/turn.example.json');
-              }
-              ctx.turnServers = servers; // session-wide, used when the room is created
-              turnError.textContent = '';
-              paintTurn();
-            } catch (err) {
-              turnError.textContent = err instanceof SyntaxError
-                ? `${file.name} is not valid JSON.`
-                : `That file can't be used: ${err.message || err}`;
-            }
-          },
-        });
-        const turnBtn = el('button', {
-          class: 'btn btn-ghost btn-small', type: 'button',
-          onclick: () => turnFile.click(),
-        }, '🔑 Upload TURN credentials (.json)');
-        const paintTurn = () => {
-          if (turnReady()) {
-            turnStatus.className = 'turn-ok';
-            turnStatus.textContent = '✓ TURN relay configured — players can join from any network.';
-          } else {
-            turnStatus.className = 'turn-warning';
-            turnStatus.textContent =
-              '⚠️ No TURN relay configured — only players on the same network as this screen ' +
-              'can connect. Phones on cellular data won\'t reach the game. Upload relay ' +
-              'credentials below, or see README → "Multiplayer connectivity".';
-          }
-        };
-        paintTurn();
-        turnBox = el('div', { class: 'setup-block' }, turnStatus, turnBtn, turnFile, turnError);
-      }
-
       async function start() {
         const settings = { timeLimitSeconds: state.timeLimit === 0 ? null : state.timeLimit };
         const scoring = { ...gameDefaults.scoring, ...state.scoring };
@@ -233,7 +174,7 @@ export function hostSetupScreen(solo) {
         startBtn.disabled = true;
         status.textContent = 'Creating room…';
         try {
-          const net = await createRoom(effectivePeerConfig());
+          const net = await createRoom(gameDefaults.network?.peer_config);
           ctx.session.mode = 'host';
           ctx.session.host = {
             net,
@@ -283,7 +224,6 @@ export function hostSetupScreen(solo) {
             el('p', { class: 'muted small' },
               'Correct: (base + speed bonus) × difficulty multiplier. Wrong: −penalty scaled by how fast you answered. Unanswered: 0.')
           ),
-          turnBox,
           startBtn,
           status
         )

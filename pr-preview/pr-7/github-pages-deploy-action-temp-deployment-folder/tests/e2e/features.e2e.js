@@ -1,7 +1,7 @@
-// Feature scenarios: JSON-driven theming, the ?debug=1 network diagnostics
-// panel, reload-reconnect with state resync, the host End-question button,
-// Play again with the same room, and the GitHub-Pages subpath invariant.
-import { BASE, SUBPATH_URL, THEME_BASE, TURN_BASE, launchBrowser, setupGame, watch } from './helpers.js';
+// Feature scenarios: JSON-driven theming, reload-reconnect with state resync,
+// the host End-question button, Play again with the same room, and the
+// GitHub-Pages subpath invariant.
+import { BASE, SUBPATH_URL, THEME_BASE, launchBrowser, setupGame, watch } from './helpers.js';
 
 export async function run(errors) {
   const browser = await launchBrowser();
@@ -28,134 +28,6 @@ export async function run(errors) {
     if (!vars.title.includes('Theme Test')) throw new Error(`title not applied: ${vars.title}`);
     console.log('THEME OK — colors, font, and title all come from the JSON');
     await ctx.close();
-  }
-
-  // ---------- TURN warning + QR show/hide ----------
-  {
-    const ctx = await browser.newContext();
-    const noTurn = await ctx.newPage();
-    watch(noTurn, 'no-turn', errors);
-
-    // Without a TURN relay: setup screen warns, lobby hides the QR by default.
-    await noTurn.goto(BASE);
-    await noTurn.getByRole('button', { name: /Host multiplayer/ }).click();
-    await noTurn.locator('.turn-warning', { hasText: /cellular/ }).waitFor({ timeout: 10000 });
-    await noTurn.getByRole('button', { name: /Create room/ }).click();
-    await noTurn.locator('.lobby-code').waitFor({ timeout: 20000 });
-    if (await noTurn.locator('.lobby-qr').isVisible()) {
-      throw new Error('QR should start hidden when no TURN relay is configured');
-    }
-    await noTurn.getByRole('button', { name: /Show QR code/ }).click();
-    if (!(await noTurn.locator('.lobby-qr').isVisible())) {
-      throw new Error('QR should appear after "Show QR code"');
-    }
-    await noTurn.getByRole('button', { name: /Hide QR code/ }).click();
-    if (await noTurn.locator('.lobby-qr').isVisible()) {
-      throw new Error('QR should hide again after "Hide QR code"');
-    }
-
-    // With a TURN relay in the pack config: no warning, QR visible by default.
-    const withTurn = await ctx.newPage();
-    watch(withTurn, 'with-turn', errors);
-    await withTurn.goto(TURN_BASE);
-    await withTurn.getByRole('button', { name: /Host multiplayer/ }).click();
-    await withTurn.getByRole('button', { name: /Create room/ }).waitFor({ timeout: 10000 });
-    if (await withTurn.locator('.turn-warning').count()) {
-      throw new Error('TURN warning shown although the pack configures a relay');
-    }
-    await withTurn.getByRole('button', { name: /Create room/ }).click();
-    await withTurn.locator('.lobby-code').waitFor({ timeout: 20000 });
-    if (!(await withTurn.locator('.lobby-qr').isVisible())) {
-      throw new Error('QR should be visible by default when TURN is configured');
-    }
-    console.log('TURN UI OK — warning + hidden QR without a relay, toggle works, quiet with one');
-
-    // Uploading a credentials file on the setup screen clears the warning
-    // and restores the QR-visible default in the lobby.
-    const uploader = await ctx.newPage();
-    watch(uploader, 'turn-upload', errors);
-    await uploader.goto(BASE);
-    await uploader.getByRole('button', { name: /Host multiplayer/ }).click();
-    await uploader.locator('.turn-warning', { hasText: /cellular/ }).waitFor({ timeout: 10000 });
-    await uploader.locator('input[type="file"]').setInputFiles({
-      name: 'turn.json',
-      mimeType: 'application/json',
-      buffer: Buffer.from(JSON.stringify({
-        iceServers: [{ urls: 'turn:turn.invalid:3478', username: 't', credential: 't' }],
-      })),
-    });
-    await uploader.locator('.turn-ok').waitFor({ timeout: 5000 });
-    if (await uploader.locator('.turn-warning').count()) {
-      throw new Error('warning still shown after uploading TURN credentials');
-    }
-    await uploader.getByRole('button', { name: /Create room/ }).click();
-    await uploader.locator('.lobby-code').waitFor({ timeout: 20000 });
-    if (!(await uploader.locator('.lobby-qr').isVisible())) {
-      throw new Error('QR should be visible after uploading TURN credentials');
-    }
-    console.log('TURN UPLOAD OK — uploaded credentials clear the warning and re-enable the QR');
-    await ctx.close();
-  }
-
-  // ---------- ?debug=1 network diagnostics panel ----------
-  {
-    const hostCtx = await browser.newContext();
-    const p1Ctx = await browser.newContext();
-    const host = await hostCtx.newPage();
-    const p1 = await p1Ctx.newPage();
-    watch(host, 'dbg-host', errors);
-    watch(p1, 'dbg-p1', errors);
-
-    await host.goto(`${BASE}&debug=1`);
-    await host.getByRole('button', { name: /Host multiplayer/ }).click();
-    await setupGame(host, { count: '3', timer: '30' });
-    await host.getByRole('button', { name: /Create room/ }).click();
-    await host.locator('.lobby-code').waitFor({ timeout: 20000 });
-    const code = (await host.locator('.lobby-code').textContent()).trim();
-    const hostLog = await host.locator('#net-debug').textContent();
-    if (!hostLog.includes('broker connected')) {
-      throw new Error(`host debug panel missing broker line: ${hostLog}`);
-    }
-
-    await p1.goto(`${BASE}&debug=1#/join/${code}`);
-    await p1.locator('input.input:not(.input-code)').first().fill('Anna');
-    await p1.getByRole('button', { name: /Join game/ }).click();
-    await p1.locator('.player-waiting').waitFor({ timeout: 20000 });
-    await p1
-      .locator('#net-debug .net-debug-line', { hasText: 'data channel open' })
-      .waitFor({ timeout: 10000 });
-    const p1Log = await p1.locator('#net-debug').textContent();
-    if (!/local candidate/.test(p1Log)) {
-      throw new Error(`player debug panel missing ICE candidate lines: ${p1Log}`);
-    }
-    if (!p1Log.includes('ice state:')) {
-      throw new Error(`player debug panel missing ICE state lines: ${p1Log}`);
-    }
-
-    // And it stays off without the flag.
-    const plain = await p1Ctx.newPage();
-    watch(plain, 'dbg-plain', errors);
-    await plain.goto(BASE);
-    await plain.getByRole('button', { name: /Play solo/ }).waitFor({ timeout: 10000 });
-    if (await plain.locator('#net-debug').count()) {
-      throw new Error('debug panel rendered without ?debug=1');
-    }
-    console.log('DEBUG PANEL OK — broker/ICE/data-channel lines on host and player, off by default');
-
-    // A failed join (no debug flag anywhere) offers "Show connection log",
-    // which replays the buffered network history after the fact.
-    await plain.goto(`${BASE}#/join/ZZZZZ`);
-    await plain.getByRole('button', { name: /Join game/ }).click();
-    await plain.locator('.status-line', { hasText: /Room not found/ }).waitFor({ timeout: 20000 });
-    await plain.getByRole('button', { name: /Show connection log/ }).click();
-    const buffered = await plain.locator('#net-debug').textContent();
-    if (!buffered.includes('dialing room ZZZZZ') || !buffered.includes('peer error')) {
-      throw new Error(`buffered connection log incomplete: ${buffered}`);
-    }
-    console.log('CONNECTION LOG OK — failed join offers the log; buffer replays history');
-
-    await hostCtx.close();
-    await p1Ctx.close();
   }
 
   // ---------- reconnect, End-question, Play again ----------
@@ -299,8 +171,7 @@ export async function run(errors) {
     watch(p, 'subpath', errors);
     const missing = [];
     p.on('response', (r) => {
-      // The TURN credentials file is optional — its absence is a normal state.
-      if (r.status() === 404 && !r.url().endsWith('data/turn.local.json')) missing.push(r.url());
+      if (r.status() === 404) missing.push(r.url());
     });
     await p.goto(SUBPATH_URL);
     await p.getByRole('button', { name: /Play solo/ }).waitFor({ timeout: 10000 });
