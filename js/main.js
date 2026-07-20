@@ -11,6 +11,7 @@ import { hostGameScreen } from './ui/screens/hostGame.js';
 import { joinScreen } from './ui/screens/join.js';
 import { lobbyScreen } from './ui/screens/lobby.js';
 import { playerGameScreen } from './ui/screens/playerGame.js';
+import { previewScreen } from './ui/screens/preview.js';
 
 const app = document.getElementById('app');
 const params = new URLSearchParams(location.search);
@@ -96,6 +97,7 @@ async function boot() {
   router.register('game', hostGameScreen);
   router.register('join', joinScreen);
   router.register('play', playerGameScreen);
+  router.register('preview', previewScreen);
   router.render();
 
   // Global mute toggle.

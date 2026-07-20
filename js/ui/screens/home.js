@@ -88,7 +88,13 @@ export const homeScreen = {
             el('button', {
               class: 'btn btn-accent btn-big', type: 'button',
               onclick: () => ctx.router.go('join'),
-            }, '📱 Join a game')
+            }, '📱 Join a game'),
+            ready
+              ? el('button', {
+                  class: 'btn btn-ghost btn-big', type: 'button',
+                  onclick: () => ctx.router.go('preview'),
+                }, '🔎 Preview / edit pack')
+              : null
           ),
           !ready
             ? el('p', { class: 'muted small' }, 'Solo and hosting unlock once a pack is loaded.')
