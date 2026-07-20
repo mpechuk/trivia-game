@@ -43,7 +43,7 @@ unrelated timeout can be a flake — re-run before assuming a regression.
   `avatars.js`, `config.js`, `questions.js`.
 - `css/` — `base.css`, `screens.css`, `animations.css` (keyframes; respect
   `prefers-reduced-motion`).
-- `data/` — question packs + `packs.json` manifest.
+- `data/` — question packs (e.g. `fifa_world_cup_2026_trivia.json`, kept as an example).
 - `tests/unit/`, `tests/e2e/` — see above.
 - `vendor/` — bundled third-party libs (PeerJS, qrcode).
 
