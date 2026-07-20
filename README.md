@@ -116,9 +116,11 @@ or [expressturn.com](https://www.expressturn.com), or self-hosted
 [data/turn.example.json](data/turn.example.json) to `data/turn.local.json`, filling in your
 values. That file is **git-ignored** — credentials never get committed — and is loaded
 automatically at startup; its servers are appended to whatever ICE set is in effect.
-A question pack can also still ship its own relay via
-`game_defaults.network.peer_config.config.iceServers` (same RTCIceServer shape), which is
-used as-is.
+The host can also load the same JSON on the fly via **"🔑 Upload TURN credentials"** on the
+Host-a-game screen (handy on a deployed site, where the git-ignored file isn't published;
+the credentials stay in the browser session). A question pack can also still ship its own
+relay via `game_defaults.network.peer_config.config.iceServers` (same RTCIceServer shape),
+which is used as-is.
 
 Without any TURN relay the game still works for same-network players, and the host UI says
 so: the setup screen shows a warning that phones on cellular data won't reach the game, and

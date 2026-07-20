@@ -236,6 +236,16 @@ details.setup-block summary {
   max-width: 42ch;
 }
 
+.turn-ok {
+  color: var(--correct);
+  font-size: 0.85rem;
+}
+
+.turn-error {
+  color: var(--wrong);
+  font-size: 0.85rem;
+}
+
 .lobby-players {
   display: flex;
   flex-wrap: wrap;

@@ -97,19 +97,25 @@ export async function loadPackManifest(url = 'data/packs.json') {
 }
 
 /**
- * Load the optional TURN credentials file (git-ignored; see
- * data/turn.example.json). Accepts either a bare RTCIceServer array or
- * `{ "iceServers": [...] }`. Returns [] when the file is absent or invalid —
- * the game then runs without a relay (same-network play only) and the host
- * screens say so.
+ * Normalize a parsed TURN credentials config — either a bare RTCIceServer
+ * array or `{ "iceServers": [...] }` (see data/turn.example.json) — into a
+ * clean server array. Returns [] for anything else.
+ */
+export function parseTurnConfig(data) {
+  const servers = Array.isArray(data) ? data : data?.iceServers;
+  return Array.isArray(servers) ? servers.filter((s) => s && s.urls) : [];
+}
+
+/**
+ * Load the optional TURN credentials file (git-ignored). Returns [] when the
+ * file is absent or invalid — the game then runs without a relay
+ * (same-network play only) and the host screens say so.
  */
 export async function loadTurnConfig(url = 'data/turn.local.json') {
   try {
     const res = await fetch(url, { cache: 'no-cache' });
     if (!res.ok) return [];
-    const data = await res.json();
-    const servers = Array.isArray(data) ? data : data?.iceServers;
-    return Array.isArray(servers) ? servers.filter((s) => s && s.urls) : [];
+    return parseTurnConfig(await res.json());
   } catch {
     return [];
   }
