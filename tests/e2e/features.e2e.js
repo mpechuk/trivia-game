@@ -30,6 +30,64 @@ export async function run(errors) {
     await ctx.close();
   }
 
+  // ---------- pack preview + editor ----------
+  {
+    const ctx = await browser.newContext();
+    const p = await ctx.newPage();
+    watch(p, 'preview', errors);
+    await p.goto(BASE);
+    await p.getByRole('button', { name: /Preview \/ edit pack/ }).click();
+
+    const count = () => p.locator('.preview-count');
+    await count().waitFor({ timeout: 10000 });
+    const startText = (await count().textContent()).trim();
+    const start = parseInt(startText, 10);
+    if (!(start > 0)) throw new Error(`no questions listed in preview: "${startText}"`);
+    if ((await p.locator('.q-card').count()) !== start) {
+      throw new Error('rendered card count does not match the question count');
+    }
+
+    // Add a question: blank editor → fill → save appends one card.
+    await p.getByRole('button', { name: /Add question/ }).click();
+    await p.locator('.q-card.editing .q-edit-text').fill('Newly added question?');
+    await p.locator('.q-card.editing .q-edit-answer').fill('Right');
+    await p.locator('.q-card.editing input[placeholder="Wrong answer 1"]').fill('Nope');
+    await p.locator('.q-card.editing').getByRole('button', { name: /Save/ }).click();
+    await p.waitForFunction(
+      (n) => document.querySelector('.preview-count')?.textContent.trim().startsWith(String(n)),
+      start + 1,
+      { timeout: 5000 }
+    );
+
+    // Saving an incomplete question surfaces validation errors, no new card.
+    await p.getByRole('button', { name: /Add question/ }).click();
+    await p.locator('.q-card.editing').getByRole('button', { name: /Save/ }).click();
+    await p.locator('.q-edit-errors').waitFor({ timeout: 5000 });
+    await p.locator('.q-card.editing').getByRole('button', { name: /Cancel/ }).click();
+
+    // Edit the first question in place.
+    await p.locator('.q-card').first().getByRole('button', { name: /Edit/ }).click();
+    await p.locator('.q-card.editing .q-edit-text').fill('Edited question text');
+    await p.locator('.q-card.editing').getByRole('button', { name: /Save/ }).click();
+    await p.locator('.q-card', { hasText: 'Edited question text' }).first().waitFor({ timeout: 5000 });
+
+    // Delete the first question via the inline confirm.
+    await p.locator('.q-card').first().getByRole('button', { name: /Delete/ }).click();
+    await p.locator('.q-card').first().getByRole('button', { name: /^Yes$/ }).click();
+    await p.waitForFunction(
+      (n) => document.querySelector('.preview-count')?.textContent.trim().startsWith(String(n)),
+      start,
+      { timeout: 5000 }
+    );
+
+    // Edits are live: the setup screen's pool reflects the new total.
+    await p.getByRole('button', { name: /‹ Back/ }).click();
+    await p.getByRole('button', { name: /Play solo/ }).click();
+    await p.locator('.setup-block', { hasText: `${start} available` }).first().waitFor({ timeout: 10000 });
+    console.log('PREVIEW/EDITOR OK — list renders, add/edit/delete work, edits reach setup');
+    await ctx.close();
+  }
+
   // ---------- TURN warning + QR show/hide ----------
   {
     const ctx = await browser.newContext();

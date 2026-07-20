@@ -15,6 +15,11 @@ example) or **deep-link one** via `?config=` (see below). Solo and hosting unloc
 pack is loaded; joining a game never needs one (players mirror the host's pack over the
 network).
 
+Once a pack is loaded, **Preview / edit pack** opens a screen listing every question with
+its answers, where you can **add, edit, and delete** questions and their answers. Edits
+apply to the current session immediately (solo/host setup use the updated questions); use
+**Export pack (.json)** there to save your changes to a file.
+
 ### Solo
 **Play solo** → pick length, difficulty mix, categories, timer → answer on the same screen.
 
