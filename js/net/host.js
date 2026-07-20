@@ -1,12 +1,14 @@
 // Host side of the PeerJS network: owns the room peer and the per-player
 // connections. Screens assign the onJoin/onAnswer/onDisconnect callbacks;
 // higher-level game logic lives in the screens, not here.
+import { instrumentConnection, instrumentPeer, netlog } from './debug.js';
+import { buildPeerOptions } from './ice.js';
 import { MSG, ROOM_PREFIX, makeRoomCode, msg, validateMsg } from './protocol.js';
 
 export class HostNetwork {
   constructor({ roomCode, peerConfig }) {
     this.roomCode = roomCode;
-    this.peerConfig = peerConfig || undefined;
+    this.peerConfig = buildPeerOptions(peerConfig);
     this.connections = new Map(); // playerId -> DataConnection
     this.onJoin = null; // ({playerId, name, avatar, conn}) => void
     this.onAnswer = null; // ({playerId, questionIndex, choiceIndex}) => void
@@ -17,8 +19,15 @@ export class HostNetwork {
   /** Resolves once the room is registered with the broker. */
   open() {
     return new Promise((resolve, reject) => {
+      netlog('host', `creating room ${this.roomCode} on broker ${this.peerConfig.host || 'peerjs cloud'}…`);
       const peer = new Peer(ROOM_PREFIX + this.roomCode, this.peerConfig);
       this.peer = peer;
+      instrumentPeer(peer, 'host');
+      // A stalled broker websocket emits nothing — fail instead of hanging.
+      const timer = setTimeout(() => {
+        netlog('host', 'broker connection stalled — giving up');
+        onError(Object.assign(new Error('Timed out reaching the PeerJS broker'), { type: 'broker-timeout' }));
+      }, 15000);
       const onOpen = () => {
         cleanup();
         peer.on('error', (err) => this._runtimeError(err));
@@ -30,6 +39,7 @@ export class HostNetwork {
         reject(err);
       };
       const cleanup = () => {
+        clearTimeout(timer);
         peer.off('open', onOpen);
         peer.off('error', onError);
       };
@@ -49,6 +59,7 @@ export class HostNetwork {
   }
 
   _wire(conn) {
+    instrumentConnection(conn, 'host');
     conn.on('data', (raw) => {
       const m = validateMsg(raw);
       if (!m) return;

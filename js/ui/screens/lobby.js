@@ -2,6 +2,7 @@
 // arrive. Owns join handling while in the lobby phase.
 import { GameEngine } from '../../game.js';
 import { renderAvatar } from '../../avatars.js';
+import { hasTurnServer } from '../../net/ice.js';
 import { MSG, msg } from '../../net/protocol.js';
 import { el } from '../../util.js';
 
@@ -111,6 +112,30 @@ export const lobbyScreen = {
       console.warn('QR generation failed', err);
     }
 
+    // Without a TURN relay only same-network devices can join, so a scanned
+    // QR often leads to a dead "Connecting…" — start it hidden in that case
+    // (the toggle brings it back for same-network phones).
+    const turnReady = hasTurnServer(net.peerConfig?.config?.iceServers);
+    let qrArea = null;
+    if (qrNode) {
+      let qrShown = turnReady;
+      const qrToggle = el('button', { class: 'btn btn-ghost btn-small', type: 'button', onclick: () => {
+        qrShown = !qrShown;
+        paintQr();
+      } });
+      const paintQr = () => {
+        qrNode.style.display = qrShown ? '' : 'none';
+        qrToggle.textContent = qrShown ? 'Hide QR code' : 'Show QR code';
+      };
+      paintQr();
+      qrArea = el('div', { class: 'lobby-qr-area' },
+        qrNode,
+        qrToggle,
+        turnReady ? null : el('p', { class: 'turn-warning' },
+          '⚠️ No TURN relay — only same-network devices can join.')
+      );
+    }
+
     const copyBtn = el('button', {
       class: 'btn btn-small', type: 'button',
       onclick: async () => {
@@ -141,7 +166,7 @@ export const lobbyScreen = {
             el('div', { class: 'lobby-code' }, host.roomCode),
             copyBtn
           ),
-          qrNode
+          qrArea
         ),
         countLine,
         playersBox,
