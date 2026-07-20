@@ -1,0 +1,13 @@
+{
+  "_comment": "TURN relay credentials. Copy this file to data/turn.local.json (git-ignored) and fill in real values — see README → 'Multiplayer connectivity'. Without it, only same-network players can join.",
+  "iceServers": [
+    {
+      "urls": [
+        "turn:YOUR_TURN_HOST:3478",
+        "turn:YOUR_TURN_HOST:3478?transport=tcp"
+      ],
+      "username": "YOUR_USERNAME",
+      "credential": "YOUR_CREDENTIAL"
+    }
+  ]
+}
