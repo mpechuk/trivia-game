@@ -843,3 +843,147 @@ button.answer-tile:hover:not(.locked) {
     grid-column: auto;
   }
 }
+
+/* ---------- pack preview / editor ---------- */
+.preview {
+  width: min(760px, 100%);
+}
+
+.preview-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin: 6px 0 14px;
+}
+
+.preview-count {
+  margin-left: auto;
+}
+
+.q-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.q-card {
+  background: rgba(0, 0, 0, 0.18);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 12px 14px;
+}
+
+.q-card.editing {
+  border-color: var(--primary);
+  background: rgba(0, 0, 0, 0.28);
+}
+
+.q-card-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 6px;
+}
+
+.q-index {
+  font-weight: 700;
+  color: var(--text-muted);
+  min-width: 1.6em;
+}
+
+.q-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.q-chip {
+  cursor: default;
+  font-size: 0.78rem;
+  padding: 3px 10px;
+}
+
+.q-card-actions {
+  margin-left: auto;
+  white-space: nowrap;
+}
+
+.q-confirm {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.q-text {
+  margin: 4px 0 8px;
+  font-weight: 600;
+}
+
+.q-answers {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.q-answer {
+  font-size: 0.92rem;
+  color: var(--text-muted);
+  padding-left: 4px;
+}
+
+.q-answer.correct {
+  color: var(--correct);
+  font-weight: 600;
+}
+
+/* ---- editor form ---- */
+.q-editor {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.q-edit-meta {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.q-edit-meta > .field {
+  flex: 1;
+  min-width: 140px;
+}
+
+.q-edit-text {
+  resize: vertical;
+}
+
+.wrong-answer-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.add-answer-btn {
+  align-self: flex-start;
+}
+
+.q-edit-errors {
+  margin: 4px 0;
+  padding-left: 20px;
+  color: var(--wrong);
+  font-size: 0.9rem;
+}
+
+.q-editor-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 6px;
+}
