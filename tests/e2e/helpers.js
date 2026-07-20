@@ -12,6 +12,7 @@ export const SUBPATH_PORT = 8082;
 export const PEER_PORT = 9100;
 export const BASE = `http://127.0.0.1:${HTTP_PORT}/?config=data/test_config.local.json`;
 export const THEME_BASE = `http://127.0.0.1:${HTTP_PORT}/?config=data/theme_test.local.json`;
+export const TURN_BASE = `http://127.0.0.1:${HTTP_PORT}/?config=data/turn_test.local.json`;
 export const SUBPATH_URL = `http://127.0.0.1:${SUBPATH_PORT}/trivia-game/`;
 
 const MIME = {
@@ -37,6 +38,12 @@ export function staticServer({ root, port, prefix = '/' }) {
       }
       path = path.slice(prefix.length);
       if (path === '' || path.endsWith('/')) path += 'index.html';
+      // The developer's real TURN credentials (git-ignored) must not leak
+      // into tests — scenarios control TURN via their generated pack configs.
+      if (path === 'data/turn.local.json') {
+        res.writeHead(404);
+        return res.end('not served in tests');
+      }
       const file = resolve(rootAbs, path);
       if (!file.startsWith(rootAbs)) {
         res.writeHead(403);
@@ -72,6 +79,18 @@ export async function generateConfigs() {
   };
   await writeFile(
     resolve(REPO_ROOT, 'data/test_config.local.json'), JSON.stringify(testCfg), 'utf8'
+  );
+
+  // Same local-broker setup plus a (fake) TURN relay in the pack config —
+  // exercises the "relay configured" UI states without touching the network.
+  const turnCfg = structuredClone(testCfg);
+  turnCfg.game_defaults.network.peer_config.config = {
+    iceServers: [
+      { urls: 'turn:turn.invalid:3478', username: 'test', credential: 'test' },
+    ],
+  };
+  await writeFile(
+    resolve(REPO_ROOT, 'data/turn_test.local.json'), JSON.stringify(turnCfg), 'utf8'
   );
 
   const themeCfg = structuredClone(testCfg);
