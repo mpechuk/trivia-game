@@ -7,6 +7,7 @@ import {
   raceMood,
   racePosition,
   randomGait,
+  soloAnswerFeedback,
 } from '../../js/ui/components.js';
 
 // ---- raceMood: the run / stumble / idle decision ----
@@ -114,4 +115,37 @@ test('randomGait: figures get distinct gaits (no two animations identical)', () 
   }
   // Seven independent continuous randoms colliding is astronomically unlikely.
   assert.equal(sigs.size, 100);
+});
+
+// ---- soloAnswerFeedback: the solo per-answer label/tone/delta ----
+
+test('soloAnswerFeedback: correct answer shows a positive gain', () => {
+  assert.deepEqual(soloAnswerFeedback({ answered: true, correct: true, delta: 150 }), {
+    label: 'Correct! +150',
+    tone: 'good',
+    delta: 150,
+  });
+});
+
+test('soloAnswerFeedback: wrong answer with a penalty shows the signed loss', () => {
+  assert.deepEqual(soloAnswerFeedback({ answered: true, correct: false, delta: -30 }), {
+    label: 'Wrong -30',
+    tone: 'bad',
+    delta: -30,
+  });
+});
+
+test('soloAnswerFeedback: wrong answer with no penalty omits the number', () => {
+  assert.deepEqual(soloAnswerFeedback({ answered: true, correct: false, delta: 0 }), {
+    label: 'Wrong',
+    tone: 'bad',
+    delta: 0,
+  });
+});
+
+test('soloAnswerFeedback: no answer is muted with a null delta', () => {
+  const expected = { label: 'No answer', tone: 'muted', delta: null };
+  assert.deepEqual(soloAnswerFeedback({ answered: false, correct: false, delta: 0 }), expected);
+  assert.deepEqual(soloAnswerFeedback(null), expected);
+  assert.deepEqual(soloAnswerFeedback(undefined), expected);
 });
