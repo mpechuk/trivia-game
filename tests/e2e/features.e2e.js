@@ -1,7 +1,7 @@
 // Feature scenarios: JSON-driven theming, the ?debug=1 network diagnostics
 // panel, reload-reconnect with state resync, the host End-question button,
 // Play again with the same room, and the GitHub-Pages subpath invariant.
-import { BASE, SUBPATH_URL, THEME_BASE, launchBrowser, setupGame, watch } from './helpers.js';
+import { BASE, SUBPATH_URL, THEME_BASE, TURN_BASE, launchBrowser, setupGame, watch } from './helpers.js';
 
 export async function run(errors) {
   const browser = await launchBrowser();
@@ -27,6 +27,48 @@ export async function run(errors) {
     if (!vars.font.includes('Georgia')) throw new Error(`font not applied: ${vars.font}`);
     if (!vars.title.includes('Theme Test')) throw new Error(`title not applied: ${vars.title}`);
     console.log('THEME OK — colors, font, and title all come from the JSON');
+    await ctx.close();
+  }
+
+  // ---------- TURN warning + QR show/hide ----------
+  {
+    const ctx = await browser.newContext();
+    const noTurn = await ctx.newPage();
+    watch(noTurn, 'no-turn', errors);
+
+    // Without a TURN relay: setup screen warns, lobby hides the QR by default.
+    await noTurn.goto(BASE);
+    await noTurn.getByRole('button', { name: /Host multiplayer/ }).click();
+    await noTurn.locator('.turn-warning', { hasText: /cellular/ }).waitFor({ timeout: 10000 });
+    await noTurn.getByRole('button', { name: /Create room/ }).click();
+    await noTurn.locator('.lobby-code').waitFor({ timeout: 20000 });
+    if (await noTurn.locator('.lobby-qr').isVisible()) {
+      throw new Error('QR should start hidden when no TURN relay is configured');
+    }
+    await noTurn.getByRole('button', { name: /Show QR code/ }).click();
+    if (!(await noTurn.locator('.lobby-qr').isVisible())) {
+      throw new Error('QR should appear after "Show QR code"');
+    }
+    await noTurn.getByRole('button', { name: /Hide QR code/ }).click();
+    if (await noTurn.locator('.lobby-qr').isVisible()) {
+      throw new Error('QR should hide again after "Hide QR code"');
+    }
+
+    // With a TURN relay in the pack config: no warning, QR visible by default.
+    const withTurn = await ctx.newPage();
+    watch(withTurn, 'with-turn', errors);
+    await withTurn.goto(TURN_BASE);
+    await withTurn.getByRole('button', { name: /Host multiplayer/ }).click();
+    await withTurn.getByRole('button', { name: /Create room/ }).waitFor({ timeout: 10000 });
+    if (await withTurn.locator('.turn-warning').count()) {
+      throw new Error('TURN warning shown although the pack configures a relay');
+    }
+    await withTurn.getByRole('button', { name: /Create room/ }).click();
+    await withTurn.locator('.lobby-code').waitFor({ timeout: 20000 });
+    if (!(await withTurn.locator('.lobby-qr').isVisible())) {
+      throw new Error('QR should be visible by default when TURN is configured');
+    }
+    console.log('TURN UI OK — warning + hidden QR without a relay, toggle works, quiet with one');
     await ctx.close();
   }
 
@@ -232,7 +274,8 @@ export async function run(errors) {
     watch(p, 'subpath', errors);
     const missing = [];
     p.on('response', (r) => {
-      if (r.status() === 404) missing.push(r.url());
+      // The TURN credentials file is optional — its absence is a normal state.
+      if (r.status() === 404 && !r.url().endsWith('data/turn.local.json')) missing.push(r.url());
     });
     await p.goto(SUBPATH_URL);
     await p.getByRole('button', { name: /Play solo/ }).waitFor({ timeout: 10000 });

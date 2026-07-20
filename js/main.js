@@ -1,7 +1,7 @@
 // Boot: load the JSON config (content + theme), apply the theme, register
 // screens, and start the hash router.
 import { createAudio } from './audio.js';
-import { DEFAULT_GAME, DEFAULT_THEME, applyTheme, loadConfig } from './config.js';
+import { DEFAULT_GAME, DEFAULT_THEME, applyTheme, loadConfig, loadTurnConfig } from './config.js';
 import { createRouter } from './router.js';
 import { createWakeLock } from './wakelock.js';
 import { el } from './util.js';
@@ -51,6 +51,9 @@ async function boot() {
     theme: DEFAULT_THEME,
     gameDefaults: DEFAULT_GAME,
     pack: null,
+    // TURN relay credentials from the git-ignored data/turn.local.json;
+    // [] means no relay (cross-network phones can't connect).
+    turnServers: await loadTurnConfig(),
     audio,
     wakeLock,
     session: makeSession(),

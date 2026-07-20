@@ -2,6 +2,7 @@
 import { avatarPicker, randomName } from '../../avatars.js';
 import { applyRemoteColors } from '../../config.js';
 import { showNetLog } from '../../net/debug.js';
+import { withExtraIceServers } from '../../net/ice.js';
 import { normalizeRoomCode } from '../../net/protocol.js';
 import { PlayerNetwork, getPlayerId, loadProfile, saveProfile } from '../../net/player.js';
 import { el } from '../../util.js';
@@ -77,7 +78,7 @@ export const joinScreen = {
       net = new PlayerNetwork({
         roomCode,
         profile: { playerId: getPlayerId(), name, avatar },
-        peerConfig: ctx.gameDefaults.network?.peer_config,
+        peerConfig: withExtraIceServers(ctx.gameDefaults.network?.peer_config, ctx.turnServers),
       });
       net.on('welcome', (m) => {
         if (joined) return;

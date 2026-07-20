@@ -96,6 +96,25 @@ export async function loadPackManifest(url = 'data/packs.json') {
   }
 }
 
+/**
+ * Load the optional TURN credentials file (git-ignored; see
+ * data/turn.example.json). Accepts either a bare RTCIceServer array or
+ * `{ "iceServers": [...] }`. Returns [] when the file is absent or invalid —
+ * the game then runs without a relay (same-network play only) and the host
+ * screens say so.
+ */
+export async function loadTurnConfig(url = 'data/turn.local.json') {
+  try {
+    const res = await fetch(url, { cache: 'no-cache' });
+    if (!res.ok) return [];
+    const data = await res.json();
+    const servers = Array.isArray(data) ? data : data?.iceServers;
+    return Array.isArray(servers) ? servers.filter((s) => s && s.urls) : [];
+  } catch {
+    return [];
+  }
+}
+
 /** Write theme values into CSS variables + document chrome (title, favicon). */
 export function applyTheme(theme, dataset) {
   const root = document.documentElement.style;

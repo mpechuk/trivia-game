@@ -112,28 +112,24 @@ requires TURN. Silent stalls (a broker or negotiation that never answers) time o
 
 To add TURN, get free-tier credentials (e.g. [metered.ca](https://www.metered.ca/stun-turn)
 or [expressturn.com](https://www.expressturn.com), or self-hosted
-[coturn](https://github.com/coturn/coturn)) and put them in your pack — prefer an endpoint
-on `:443?transport=tcp`, which passes the most restrictive networks:
+[coturn](https://github.com/coturn/coturn)) and copy
+[data/turn.example.json](data/turn.example.json) to `data/turn.local.json`, filling in your
+values. That file is **git-ignored** — credentials never get committed — and is loaded
+automatically at startup; its servers are appended to whatever ICE set is in effect.
+A question pack can also still ship its own relay via
+`game_defaults.network.peer_config.config.iceServers` (same RTCIceServer shape), which is
+used as-is.
 
-```json
-"game_defaults": {
-  "network": {
-    "peer_config": {
-      "config": {
-        "iceServers": [
-          { "urls": "stun:stun.l.google.com:19302" },
-          { "urls": "turn:YOUR_TURN_HOST:443?transport=tcp",
-            "username": "USER", "credential": "SECRET" }
-        ]
-      }
-    }
-  }
-}
-```
+Without any TURN relay the game still works for same-network players, and the host UI says
+so: the setup screen shows a warning that phones on cellular data won't reach the game, and
+the lobby starts with the QR code hidden (a Show/Hide QR button toggles it — same-network
+phones can still scan it).
 
 Configuring the **host alone is enough** for most cases: a relay candidate on either side is
-publicly reachable by the other. Players who join via the lobby QR/link inherit the host's
-config automatically (the link carries `?config=`).
+publicly reachable by the other. Note for deployments: `data/turn.local.json` is not checked
+in, so a plain GitHub Pages deploy won't include it — add it to the deployed site out of
+band (e.g. write it from a repository secret during the deploy workflow) or host with a pack
+that carries its own credentials.
 
 ## Development
 

@@ -1,6 +1,11 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { DEFAULT_ICE_SERVERS, buildPeerOptions } from '../../js/net/ice.js';
+import {
+  DEFAULT_ICE_SERVERS,
+  buildPeerOptions,
+  hasTurnServer,
+  withExtraIceServers,
+} from '../../js/net/ice.js';
 
 const flatUrls = (servers) => servers.flatMap((s) => (Array.isArray(s.urls) ? s.urls : [s.urls]));
 
@@ -48,4 +53,37 @@ test('buildPeerOptions does not mutate the pack config', () => {
   const packConfig = { host: 'example.com', config: {} };
   buildPeerOptions(packConfig);
   assert.deepEqual(packConfig, { host: 'example.com', config: {} });
+});
+
+const TURN = { urls: 'turn:relay.example:3478', username: 'u', credential: 'c' };
+
+test('hasTurnServer detects relays in any urls shape', () => {
+  assert.equal(hasTurnServer([TURN]), true);
+  assert.equal(hasTurnServer([{ urls: ['stun:s.example', 'turns:r.example:443'] }]), true);
+  assert.equal(hasTurnServer(DEFAULT_ICE_SERVERS), false);
+  assert.equal(hasTurnServer([]), false);
+  assert.equal(hasTurnServer(undefined), false);
+});
+
+test('withExtraIceServers appends TURN to the defaults when the pack has none', () => {
+  const opts = withExtraIceServers(null, [TURN]);
+  assert.deepEqual(opts.config.iceServers, [...DEFAULT_ICE_SERVERS, TURN]);
+  // buildPeerOptions then keeps the merged list as-is.
+  assert.deepEqual(buildPeerOptions(opts).config.iceServers, [...DEFAULT_ICE_SERVERS, TURN]);
+});
+
+test('withExtraIceServers appends to pack-provided iceServers, keeping broker options', () => {
+  const pack = { host: '127.0.0.1', port: 9100, config: { iceServers: [{ urls: 'stun:mine.example' }] } };
+  const opts = withExtraIceServers(pack, [TURN]);
+  assert.equal(opts.host, '127.0.0.1');
+  assert.equal(opts.port, 9100);
+  assert.deepEqual(opts.config.iceServers, [{ urls: 'stun:mine.example' }, TURN]);
+  assert.deepEqual(pack.config.iceServers, [{ urls: 'stun:mine.example' }]); // untouched
+});
+
+test('withExtraIceServers without extras passes the pack config through', () => {
+  assert.equal(withExtraIceServers(null, []), undefined);
+  assert.equal(withExtraIceServers(undefined, undefined), undefined);
+  const pack = { config: { iceServers: [TURN] } };
+  assert.deepEqual(withExtraIceServers(pack, []), pack); // pack TURN still works alone
 });

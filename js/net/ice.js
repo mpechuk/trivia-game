@@ -19,6 +19,37 @@ export const DEFAULT_ICE_SERVERS = [
   { urls: 'stun:stun.cloudflare.com:3478' },
 ];
 
+/** True when the ICE server list contains a relay (turn:/turns: URL). */
+export function hasTurnServer(iceServers) {
+  return (iceServers || []).some((s) =>
+    (Array.isArray(s?.urls) ? s.urls : [s?.urls]).some(
+      (u) => typeof u === 'string' && u.startsWith('turn')
+    )
+  );
+}
+
+/**
+ * Merge additional ICE servers (e.g. TURN credentials from the git-ignored
+ * data/turn.local.json) into a pack's `network.peer_config`. The extras are
+ * appended after whatever the base config resolves to — pack-provided
+ * iceServers, or DEFAULT_ICE_SERVERS — so packs that ship their own TURN
+ * keep working with or without a local credentials file. Never mutates
+ * the inputs.
+ */
+export function withExtraIceServers(peerConfig, extraServers) {
+  if (!Array.isArray(extraServers) || extraServers.length === 0) {
+    return peerConfig ? structuredClone(peerConfig) : undefined;
+  }
+  const options = peerConfig ? structuredClone(peerConfig) : {};
+  const rtcConfig = options.config || {};
+  const base = Array.isArray(rtcConfig.iceServers) && rtcConfig.iceServers.length
+    ? rtcConfig.iceServers
+    : structuredClone(DEFAULT_ICE_SERVERS);
+  rtcConfig.iceServers = [...base, ...structuredClone(extraServers)];
+  options.config = rtcConfig;
+  return options;
+}
+
 /**
  * Build the PeerJS options object from a pack's `network.peer_config`.
  * Injects DEFAULT_ICE_SERVERS unless the config brings its own iceServers;

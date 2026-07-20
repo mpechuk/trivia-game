@@ -223,6 +223,19 @@ details.setup-block summary {
   image-rendering: pixelated;
 }
 
+.lobby-qr-area {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.turn-warning {
+  color: var(--accent);
+  font-size: 0.85rem;
+  max-width: 42ch;
+}
+
 .lobby-players {
   display: flex;
   flex-wrap: wrap;

@@ -2,6 +2,7 @@
 // All controls default to the config's game_defaults block.
 import { avatarPicker, randomName } from '../../avatars.js';
 import { createRoom } from '../../net/host.js';
+import { buildPeerOptions, hasTurnServer, withExtraIceServers } from '../../net/ice.js';
 import { loadProfile, saveProfile } from '../../net/player.js';
 import { MIX_PRESETS, buildPlan, categoriesOf, difficultyTargets, filterPool, DIFFICULTY_LABELS } from '../../questions.js';
 import { clamp, el } from '../../util.js';
@@ -148,6 +149,18 @@ export function hostSetupScreen(solo) {
       const startBtn = el('button', { class: 'btn btn-primary btn-big', type: 'button', onclick: start },
         solo ? '▶ Start solo game' : '📺 Create room');
 
+      // Pack peer_config + TURN credentials from data/turn.local.json. Without
+      // a relay, players behind carrier-grade NAT (phones on cellular) cannot
+      // reach the host — warn up front rather than fail mysteriously.
+      const peerConfig = withExtraIceServers(gameDefaults.network?.peer_config, ctx.turnServers);
+      const turnReady = hasTurnServer(buildPeerOptions(peerConfig).config.iceServers);
+      const turnWarning = !solo && !turnReady
+        ? el('p', { class: 'turn-warning' },
+            '⚠️ No TURN relay configured — only players on the same network as this screen ' +
+            'can connect. Phones on cellular data won\'t reach the game. ' +
+            'See README → "Multiplayer connectivity" to add relay credentials.')
+        : null;
+
       async function start() {
         const settings = { timeLimitSeconds: state.timeLimit === 0 ? null : state.timeLimit };
         const scoring = { ...gameDefaults.scoring, ...state.scoring };
@@ -174,7 +187,7 @@ export function hostSetupScreen(solo) {
         startBtn.disabled = true;
         status.textContent = 'Creating room…';
         try {
-          const net = await createRoom(gameDefaults.network?.peer_config);
+          const net = await createRoom(peerConfig);
           ctx.session.mode = 'host';
           ctx.session.host = {
             net,
@@ -224,6 +237,7 @@ export function hostSetupScreen(solo) {
             el('p', { class: 'muted small' },
               'Correct: (base + speed bonus) × difficulty multiplier. Wrong: −penalty scaled by how fast you answered. Unanswered: 0.')
           ),
+          turnWarning,
           startBtn,
           status
         )
