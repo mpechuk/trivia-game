@@ -80,23 +80,6 @@ export async function loadConfig(url) {
 }
 
 /**
- * Load the manifest of built-in packs (data/packs.json). Returns [] on any
- * failure so the home screen can still offer "upload your own pack".
- */
-export async function loadPackManifest(url = 'data/packs.json') {
-  try {
-    const res = await fetch(url, { cache: 'no-cache' });
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    const data = await res.json();
-    const packs = Array.isArray(data) ? data : data.packs;
-    return Array.isArray(packs) ? packs.filter((p) => p && typeof p.file === 'string') : [];
-  } catch (err) {
-    console.warn('pack manifest unavailable:', err.message || err);
-    return [];
-  }
-}
-
-/**
  * Normalize a parsed TURN credentials config — either a bare RTCIceServer
  * array or `{ "iceServers": [...] }` (see data/turn.example.json) — into a
  * clean server array. Returns [] for anything else.

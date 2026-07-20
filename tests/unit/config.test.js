@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { DEFAULT_GAME, DEFAULT_THEME, loadConfig, loadPackManifest, loadTurnConfig, normalizeConfig, parseTurnConfig } from '../../js/config.js';
+import { DEFAULT_GAME, DEFAULT_THEME, loadConfig, loadTurnConfig, normalizeConfig, parseTurnConfig } from '../../js/config.js';
 
 const QUESTION = {
   id: 1, category: 'X', difficulty: 1, question: 'q?', answer: 'A', wrong_answers: ['B', 'C', 'D', 'E'],
@@ -65,18 +65,6 @@ test('normalizeConfig accepts a parsed dataset (used for uploaded packs)', () =>
 test('normalizeConfig rejects datasets without questions', () => {
   assert.throws(() => normalizeConfig({ title: 'X' }, 'bad.json'), /no questions/);
   assert.throws(() => normalizeConfig(null, 'null.json'), /no questions/);
-});
-
-test('loadPackManifest returns the packs array', async () => {
-  stubFetch({ packs: [{ file: 'a.json', name: 'A' }, { name: 'no file' }] });
-  const packs = await loadPackManifest('packs.json');
-  assert.equal(packs.length, 1); // entry without a file is dropped
-  assert.equal(packs[0].file, 'a.json');
-});
-
-test('loadPackManifest returns [] on failure', async () => {
-  stubFetch({}, false);
-  assert.deepEqual(await loadPackManifest('missing.json'), []);
 });
 
 test('parseTurnConfig normalizes both shapes and drops junk entries', () => {

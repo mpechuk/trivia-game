@@ -1,6 +1,6 @@
-// Landing screen: pick a question pack (built-in or uploaded), then play
-// solo, host a room, or join one. Solo/host stay locked until a pack is chosen.
-import { loadConfig, loadPackManifest, normalizeConfig } from '../../config.js';
+// Landing screen: upload a question pack, then play solo, host a room, or
+// join one. Solo/host stay locked until a pack is chosen.
+import { normalizeConfig } from '../../config.js';
 import { el } from '../../util.js';
 
 export const homeScreen = {
@@ -9,8 +9,7 @@ export const homeScreen = {
     ctx.session.reset();
     ctx.wakeLock.disable();
 
-    let manifest = [];
-    let busy = false; // true while a pack is being fetched/parsed
+    let busy = false; // true while a pack is being parsed
     const status = el('p', { class: 'status-line', role: 'status' });
 
     const fileInput = el('input', {
@@ -23,24 +22,6 @@ export const homeScreen = {
         fileInput.value = ''; // allow re-picking the same file
       },
     });
-
-    async function selectBuiltin(entry) {
-      if (busy) return;
-      busy = true;
-      status.textContent = `Loading ${entry.name || entry.file}…`;
-      paint();
-      try {
-        const config = await loadConfig(`data/${entry.file}`);
-        ctx.setPack(config, { source: 'builtin', file: entry.file, name: entry.name });
-        status.textContent = '';
-      } catch (err) {
-        console.error(err);
-        status.textContent = `Could not load that pack: ${err.message || err}`;
-      } finally {
-        busy = false;
-        paint();
-      }
-    }
 
     async function selectUpload(file) {
       if (busy) return;
@@ -63,31 +44,10 @@ export const homeScreen = {
       }
     }
 
-    function packCard(entry) {
-      const selected = ctx.pack?.source === 'builtin' && ctx.pack.file === entry.file;
-      return el('button', {
-        type: 'button',
-        class: `pack-card ${selected ? 'selected' : ''}`,
-        disabled: busy ? '' : null,
-        onclick: () => selectBuiltin(entry),
-      },
-        el('span', { class: 'pack-emoji', 'aria-hidden': 'true' }, entry.emoji || '🎯'),
-        el('span', { class: 'pack-info' },
-          el('span', { class: 'pack-name' }, entry.name || entry.file),
-          entry.description ? el('span', { class: 'muted small pack-desc' }, entry.description) : null
-        ),
-        selected ? el('span', { class: 'pack-check', 'aria-hidden': 'true' }, '✓') : null
-      );
-    }
-
     function chooser() {
-      const cards = manifest.map(packCard);
       const uploadSelected = ctx.pack?.source === 'upload';
       return el('div', { class: 'pack-chooser' },
         el('h3', {}, 'Choose a question pack'),
-        cards.length
-          ? el('div', { class: 'pack-list' }, cards)
-          : el('p', { class: 'muted small' }, 'No built-in packs found — upload your own below.'),
         el('div', { class: 'pack-upload' },
           el('button', {
             type: 'button',
@@ -101,7 +61,6 @@ export const homeScreen = {
     }
 
     function paint() {
-      const pack = ctx.pack;
       const ready = !!ctx.dataset;
       const title = ready ? ctx.dataset.title || 'Trivia' : 'Trivia';
 
@@ -111,7 +70,7 @@ export const homeScreen = {
           el('h1', { class: 'home-title' }, title),
           ready && ctx.dataset.description
             ? el('p', { class: 'muted home-desc' }, ctx.dataset.description)
-            : el('p', { class: 'muted home-desc' }, 'Pick a pack to start, or join a game someone else is hosting.'),
+            : el('p', { class: 'muted home-desc' }, 'Upload a pack to start, or join a game someone else is hosting.'),
 
           chooser(),
 
@@ -141,10 +100,5 @@ export const homeScreen = {
     }
 
     paint();
-    // Fetch the built-in pack list, then repaint to show the cards.
-    loadPackManifest().then((packs) => {
-      manifest = packs;
-      paint();
-    });
   },
 };
