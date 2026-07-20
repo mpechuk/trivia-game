@@ -22,14 +22,22 @@ export async function run(errors) {
       await tile.waitFor({ state: 'visible', timeout: 20000 });
       const t = await p.locator('.timer-text').textContent();
       if (!/^\d+$/.test(t) || Number(t) > 10) throw new Error(`solo timer looks wrong: "${t}"`);
+      // The running-score chip is always visible during solo play.
+      if (!(await p.locator('.solo-score .solo-score-value').first().isVisible())) {
+        throw new Error('solo score chip missing during the question');
+      }
       await tile.click();
       await p.locator('.answer-line').waitFor({ timeout: 20000 });
       console.log(`  solo q${i + 1}: ${await p.locator('.solo-result').textContent()}`);
+      // After answering, the chip reports how the latest answer changed points.
+      const delta = await p.locator('.solo-score-delta').first().textContent();
+      if (!/last:/.test(delta || '')) throw new Error(`solo delta looks wrong: "${delta}"`);
       await p.getByRole('button', { name: 'Next ▸' }).click();
-      await p.locator('.race-track').waitFor({ timeout: 10000 });
     }
     await p.locator('.podium').waitFor({ timeout: 30000 });
-    console.log('SOLO OK — podium reached');
+    // Solo never shows the between-round "run" screen.
+    if (await p.locator('.race-track').count()) throw new Error('solo should not show the run screen');
+    console.log('SOLO OK — podium reached, no run screen');
     await ctx.close();
   }
 

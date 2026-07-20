@@ -205,3 +205,45 @@ test('maxPossibleSoFar tracks the best achievable cumulative score', async (t) =
   const r2 = await once(engine, 'reveal');
   assert.equal(r2.maxPossibleSoFar, 100 + 200); // difficulty 5 ×2 multiplier
 });
+
+test('skipRace: reveal advances straight to the next question, never emitting race', async (t) => {
+  const engine = new GameEngine({
+    plan: [item(1), item(1, 1)],
+    settings: { timeLimitSeconds: null },
+    scoring: { ...SCORING },
+    skipRace: true,
+  });
+  engine.addPlayer({ id: 'p1', name: 'p1', avatar: { kind: 'emoji', value: '🙂' } });
+  t.after(() => engine.destroy());
+
+  let raceSeen = false;
+  engine.events.on('race', () => { raceSeen = true; });
+
+  const q0 = once(engine, 'question');
+  engine.start();
+  await q0;
+  engine.submitAnswer('p1', 0, 0);
+  await once(engine, 'reveal');
+  assert.equal(engine.phase, 'reveal');
+
+  // From reveal, a single advance() jumps to the next question (no race phase).
+  const q1 = once(engine, 'question');
+  engine.advance();
+  await q1;
+  assert.equal(engine.phase, 'q_open');
+  assert.equal(raceSeen, false);
+});
+
+test('race phase is still the default when skipRace is not set', async (t) => {
+  const engine = makeEngine({ plan: [item(1), item(1, 1)], players: ['p1'] });
+  t.after(() => engine.destroy());
+  const q0 = once(engine, 'question');
+  engine.start();
+  await q0;
+  engine.submitAnswer('p1', 0, 0);
+  await once(engine, 'reveal');
+  const race = once(engine, 'race');
+  engine.advance(); // reveal → race
+  await race;
+  assert.equal(engine.phase, 'race');
+});

@@ -82,6 +82,22 @@ export function answerTile(index, label, buttonTheme, { onclick, small = false }
   return tile;
 }
 
+/**
+ * Solo per-answer feedback: the label and tone to show for the player's latest
+ * result. Pure — exported for testing.
+ * @param result reveal result {answered, correct, delta} (or null/undefined)
+ * @returns {{label, tone, delta}} tone is 'good' | 'bad' | 'muted'; delta is the
+ *   signed point change, or null when there was no answer.
+ */
+export function soloAnswerFeedback(result) {
+  if (!result || !result.answered) {
+    return { label: 'No answer', tone: 'muted', delta: null };
+  }
+  const delta = result.delta || 0;
+  if (result.correct) return { label: `Correct! +${delta}`, tone: 'good', delta };
+  return { label: delta ? `Wrong ${delta}` : 'Wrong', tone: 'bad', delta };
+}
+
 /** Ranked standings list. highlightId marks "you" on player screens. */
 export function standingsList(standings, { limit = 0, highlightId = null, showDelta = true } = {}) {
   const rows = limit ? standings.slice(0, limit) : standings;

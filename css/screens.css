@@ -416,6 +416,37 @@ details.setup-block summary {
 .solo-result.good { color: var(--correct); }
 .solo-result.bad { color: var(--wrong); }
 
+/* persistent solo scoreboard in the game header */
+.solo-score {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 999px;
+  padding: 8px 16px;
+  font-weight: 700;
+}
+
+.solo-score-label {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  opacity: 0.7;
+}
+
+.solo-score-value {
+  font-size: 1.4rem;
+  color: var(--accent);
+}
+
+.solo-score-delta {
+  font-size: 0.95rem;
+}
+
+.solo-score-delta.good { color: var(--correct); }
+.solo-score-delta.bad { color: var(--wrong); }
+.solo-score-delta.muted { opacity: 0.6; }
+
 .tiles {
   display: grid;
   grid-template-columns: 1fr 1fr;

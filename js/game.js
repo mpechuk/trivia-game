@@ -19,11 +19,15 @@ export class GameEngine {
    * @param settings {timeLimitSeconds|null}
    * @param scoring  {base_points, max_speed_bonus, difficulty_multiplier[5],
    *                  wrong_penalty_max, min_score}
+   * @param skipRace when true, reveal advances straight to the next question
+   *                 without the between-round "run" screen (used by solo play,
+   *                 where a one-runner race is pointless).
    */
-  constructor({ plan, settings, scoring }) {
+  constructor({ plan, settings, scoring, skipRace = false }) {
     this.plan = plan;
     this.settings = settings;
     this.scoring = scoring;
+    this.skipRace = skipRace;
     this.events = createEmitter();
     this.players = new Map(); // id -> {id, name, avatar, score, connected}
     this.phase = 'idle';
@@ -189,12 +193,14 @@ export class GameEngine {
    * reveal → race → next question. Also bound to the host "Next"/"Skip"
    * buttons. Entering 'race' does not schedule the next question: the host UI
    * calls advance() again once the run animation has finished (plus a short
-   * settle), so the animation is never cut off. Calling advance() in any other
-   * phase is a no-op.
+   * settle), so the animation is never cut off. When skipRace is set the 'race'
+   * phase is bypassed entirely (reveal → next question). Calling advance() in
+   * any other phase is a no-op.
    */
   advance() {
     if (this.phase === 'reveal') {
       this._clearTimers();
+      if (this.skipRace) return this._nextQuestion();
       this.phase = 'race';
       this.events.emit('race', {
         index: this.qIndex,
