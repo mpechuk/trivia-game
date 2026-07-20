@@ -5,7 +5,7 @@ import { GameEngine } from '../../game.js';
 import { MSG, msg } from '../../net/protocol.js';
 import { DIFFICULTY_LABELS } from '../../questions.js';
 import { el } from '../../util.js';
-import { answerTile, confettiBurst, podium, raceTrack, RACE_SETTLE_MS, standingsList, timerRing } from '../components.js';
+import { answerTile, confettiBurst, podium, raceTrack, RACE_SETTLE_MS, soloAnswerFeedback, standingsList, timerRing } from '../components.js';
 
 const SOLO_PLAYER_ID = 'you';
 
@@ -17,7 +17,7 @@ export const hostGameScreen = {
 
     if (mode === 'solo' && ctx.session.solo) {
       const s = ctx.session.solo;
-      engine = new GameEngine({ plan: s.plan, settings: s.settings, scoring: s.scoring });
+      engine = new GameEngine({ plan: s.plan, settings: s.settings, scoring: s.scoring, skipRace: true });
       engine.addPlayer({ id: SOLO_PLAYER_ID, ...s.profile });
       s.engine = engine;
     } else if (mode === 'host' && ctx.session.host?.engine) {
@@ -45,13 +45,17 @@ export const hostGameScreen = {
     });
     const main = el('div', { class: 'game-main' });
     const answeredPill = el('div', { class: 'answered-pill', hidden: '' });
+    // Solo has no player sidebar, so a persistent header chip carries the
+    // running score and how the latest answer changed it.
+    const soloScore = solo ? el('div', { class: 'solo-score', hidden: '' }) : null;
+    let lastSoloResult = null;
     const controls = el('div', { class: 'game-controls' });
     const sidebar = el('aside', { class: 'game-sidebar' });
 
     container.append(
       el('div', { class: 'game-layout' + (solo ? ' solo' : '') },
         el('header', { class: 'game-head' },
-          progressEl, categoryEl, answeredPill, timer.el
+          progressEl, categoryEl, answeredPill, soloScore, timer.el
         ),
         main,
         solo ? null : sidebar,
@@ -64,6 +68,25 @@ export const hostGameScreen = {
     }
     function btn(label, onclick, cls = 'btn btn-primary') {
       return el('button', { class: cls, type: 'button', onclick }, label);
+    }
+    // Solo scoreboard: current total, plus the signed change from the latest
+    // answer (kept visible through the following question until it's replaced).
+    function renderSoloScore() {
+      if (!solo) return;
+      const score = engine.players.get(SOLO_PLAYER_ID)?.score ?? 0;
+      const kids = [
+        el('span', { class: 'solo-score-label' }, 'Points'),
+        el('span', { class: 'solo-score-value' }, String(score)),
+      ];
+      if (lastSoloResult) {
+        const fb = soloAnswerFeedback(lastSoloResult);
+        const text = fb.delta === null
+          ? 'last: no answer'
+          : `last: ${fb.delta > 0 ? '+' : ''}${fb.delta}`;
+        kids.push(el('span', { class: `solo-score-delta ${fb.tone}` }, text));
+      }
+      soloScore.replaceChildren(...kids);
+      soloScore.removeAttribute('hidden');
     }
     function renderSidebar(standings) {
       if (solo) return;
@@ -94,6 +117,7 @@ export const hostGameScreen = {
         )
       );
       renderSidebar(engine.getStandings());
+      renderSoloScore();
     }));
 
     unsubs.push(engine.events.on('question', ({ index, total, item, deadline, timeLimitSeconds }) => {
@@ -198,14 +222,12 @@ export const hostGameScreen = {
       if (solo) {
         const r = results.get(SOLO_PLAYER_ID);
         ctx.audio.play(r?.correct ? 'correct' : 'wrong');
-        const line = r?.answered
-          ? r.correct
-            ? `Correct! +${r.delta}`
-            : `Wrong ${r.delta ? r.delta : ''}`
-          : 'No answer';
+        lastSoloResult = r ?? { answered: false };
+        const fb = soloAnswerFeedback(r);
         main.querySelector('.answer-line').after(
-          el('p', { class: `solo-result ${r?.correct ? 'good' : 'bad'}` }, line)
+          el('p', { class: `solo-result ${r?.correct ? 'good' : 'bad'}` }, fb.label)
         );
+        renderSoloScore();
       }
 
       renderSidebar(standings);
